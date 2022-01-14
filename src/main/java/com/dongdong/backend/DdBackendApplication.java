@@ -14,7 +14,7 @@ public class DdBackendApplication {
 		SpringApplication.run(DdBackendApplication.class, args);
 	}
 
-	@GetMapping("ping")
+	@GetMapping("/ping")
 	public String ping() {
 		return "pong!";
 	}
