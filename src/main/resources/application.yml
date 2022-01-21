@@ -8,7 +8,7 @@ spring:
   kafka:
     bootstrap-servers: 127.0.0.1:9092
     consumer:
-      group-id: myGroup
+      group-id: ddBackend
       enable-auto-commit: true
       auto-commit-interval: 100ms
       properties:
@@ -22,3 +22,5 @@ spring:
       buffer-memory: 33554432 #Producer 用来缓冲等待被发送到服务器的记录的总字节数，33554432是缺省配置
       key-serializer: org.apache.kafka.common.serialization.StringSerializer #关键字的序列化类
       value-serializer: org.apache.kafka.common.serialization.StringSerializer #值的序列化类
+    admin:
+      client-id: ddBackend

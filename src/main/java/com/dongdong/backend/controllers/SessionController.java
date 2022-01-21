@@ -7,7 +7,6 @@ import com.dongdong.backend.utils.TimeUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -22,24 +21,22 @@ import java.io.IOException;
 public class SessionController {
 
     private static final Logger log = LoggerFactory.getLogger(SessionController.class);
-    private final SessionService sessionService;
 
-    @Autowired
-    public SessionController(SessionService sessionService) {
-        this.sessionService = sessionService;
-        Runnable dispatcher = new MessageDispatcher(sessionService);
-        Thread dispatchThread = new Thread(dispatcher);
-        dispatchThread.setDaemon(true);
-        dispatchThread.start();
-    }
+    public static SessionService sessionService;
 
     @OnOpen
     public void openSession(@PathParam("name") String name, Session session) {
         log.info("有新的连接：{}", session);
-        SessionPool.add(sessionService.sessionID(name), session);
+        String sessionName = sessionService.sessionID(name);
+        SessionPool.add(sessionName, session);
         log.info("用户已上线：{}", name);
         log.info("在线人数：{}", SessionPool.count());
         SessionPool.sessionMap().keySet().forEach(item -> log.info("在线用户：" + item));
+        // 测试用 //////////////////////////////
+//        sessionService.register("dd1");
+//        sessionService.register("dd2");
+        //////////////////////////////////////
+        sessionService.dispatch(name);
     }
 
     @OnMessage
@@ -48,7 +45,7 @@ public class SessionController {
         try {
             Message msg = Message.unmarshal(message);
             // 发送到kafka
-            ListenableFuture<SendResult<String, String>> future = sessionService.send(msg.receiver(), message);
+            ListenableFuture<SendResult<String, String>> future = sessionService.send(msg.receiver(), msg.timestamp(), message);
             future.addCallback(result -> {
                 log.info("消息暂存成功：{}", message);
                 // 响应ack消息
@@ -82,22 +79,6 @@ public class SessionController {
             log.error("退出发生异常：{}", e.getMessage());
         }
         log.error("连接出现异常：{}", throwable.getMessage());
-    }
-
-}
-
-class MessageDispatcher implements Runnable {
-
-    private static final Logger log = LoggerFactory.getLogger(SessionController.class);
-    private final SessionService sessionService;
-
-    public MessageDispatcher(SessionService sessionService) {
-        this.sessionService = sessionService;
-    }
-
-    @Override
-    public void run() {
-
     }
 
 }
