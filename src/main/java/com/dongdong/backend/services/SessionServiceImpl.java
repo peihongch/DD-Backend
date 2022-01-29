@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.errors.TopicExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,10 +73,12 @@ public class SessionServiceImpl implements SessionService {
     public boolean register(String receiver) {
         var topicName = topic(receiver);
         NewTopic topic = new NewTopic(topicName, 1, (short) 1);
-        var result = kafkaAdmin.createTopics(List.of(topic));
         try {
+            var result = kafkaAdmin.createTopics(List.of(topic));
             result.values().get(topicName).get();
             return true;
+        } catch (TopicExistsException e) {
+            log.error("会话已存在: {}, {}", topicName, e.getMessage());
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
