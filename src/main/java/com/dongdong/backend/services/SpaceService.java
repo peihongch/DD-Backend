@@ -14,13 +14,13 @@ public interface SpaceService {
 
     void deleteBlog(String blogId);
 
-    void transferBlog(String userId, String blogId);
+    void transferBlog(String userId, String blogId,String timestamp);
 
     void likeBlog(String userId,String blogId);
 
     void dislikeBlog(String userId, String blogId);
 
-    void addComments(String userId, String blogId, String context);
+    void addComments(String userId, String blogId, String context,String timestamp);
 
-    void deleteComents(String userId, String blogId, String contextId);
+    void deleteComents(String contextId);
 }

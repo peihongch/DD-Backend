@@ -1,7 +1,6 @@
 package com.dongdong.backend.entity;
 
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,12 +8,11 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name="blog")
+@Table(name="likes")
 @Data
 @Builder
 @AllArgsConstructor
-public class Blog {
-
+public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
@@ -23,16 +21,10 @@ public class Blog {
     @Column(name="userId")
     private Long userId;
 
-    @Column(name="timestamp")
-    private String timestamp;
+    @Column(name="blogId")
+    private Long blogId;
 
-    @Column(name="context")
-    private String context;
-
-    @Column(name="likes")
-    private Long likes;
-
-    public Blog() {
+    public Like() {
 
     }
 }

@@ -17,7 +17,7 @@ import java.util.List;
  * @param comments  动态的评论
  * @param likes     点赞数
  */
-public record BlogVO(String user, String blogId,String timestamp, String context, List<String> pics, List<String> comments, Long likes)
+public record BlogVO(String user, String blogId,String timestamp, String context, List<String> pics, List<String> comments, Long likes,boolean liked)
         implements Serializable{
 
     public static String marshal(BlogVO blogVO) throws JsonProcessingException {
