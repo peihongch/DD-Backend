@@ -5,6 +5,7 @@ import com.dongdong.backend.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -61,5 +62,16 @@ public class UserService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<User> searchUser(String username){
+        try{
+            List<User> res=userRepository.searchUser("%"+username+"%");
+            return res;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }
