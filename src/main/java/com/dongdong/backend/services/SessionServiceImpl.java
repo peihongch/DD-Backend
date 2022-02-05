@@ -121,17 +121,20 @@ public class SessionServiceImpl implements SessionService {
         var consumer = getConsumer(this.topic(receiver));
         Thread msgDispatcher = new Thread(() -> {
             // 检查当前会话是否结束
+            log.info("开始接收消息: {}", receiver);
             while (SessionPool.get(receiver) != null) {
                 var records = consumer.poll(Duration.ofMillis(100));
                 records.forEach(record -> {
                     // 有消息丢失风险：当调用该接口发送消息过程中，目标session关闭了，则会导致该消息丢失
                     // 解决：将消息重新放入kafka
                     var success = this.receive(record.value());
+                    log.info("接收消息: {}, {}", receiver, success ? "成功" : "失败");
                     if (!success) {
                         this.send(receiver, record.key(), record.value());
                     }
                 });
             }
+            log.info("停止接收消息: {}", receiver);
         });
         msgDispatcher.setDaemon(true);
         msgDispatcher.start();
@@ -161,10 +164,14 @@ public class SessionServiceImpl implements SessionService {
     }
 
     public KafkaConsumer<String, String> getConsumer(String topic) {
-        //创建消息者实例
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(this.kafkaProps);
-        //订阅topic的消息
-        consumer.subscribe(List.of(topic));
+        KafkaConsumer<String, String> consumer = SessionPool.getKafkaConsumer(topic);
+        if (consumer == null) {
+            //创建消息者实例
+            consumer = new KafkaConsumer<>(this.kafkaProps);
+            //订阅topic的消息
+            consumer.subscribe(List.of(topic));
+            SessionPool.cacheKafkaConsumer(topic, consumer);
+        }
         return consumer;
     }
 

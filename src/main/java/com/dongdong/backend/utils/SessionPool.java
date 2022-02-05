@@ -1,5 +1,7 @@
 package com.dongdong.backend.utils;
 
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+
 import javax.websocket.Session;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,6 +13,7 @@ public class SessionPool {
 
     // 在线用户websocket连接池
     private static final Map<String, Session> ONLINE_USER_SESSIONS = new ConcurrentHashMap<>();
+    private static final Map<String, KafkaConsumer<String, String>> KAFKA_CONSUMER_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 新增一则连接
@@ -55,5 +58,13 @@ public class SessionPool {
      */
     public static Map<String, Session> sessionMap() {
         return ONLINE_USER_SESSIONS;
+    }
+
+    public static KafkaConsumer<String, String> getKafkaConsumer(String topic) {
+        return KAFKA_CONSUMER_CACHE.get(topic);
+    }
+
+    public static void cacheKafkaConsumer(String topic, KafkaConsumer<String, String> consumer) {
+        KAFKA_CONSUMER_CACHE.put(topic, consumer);
     }
 }
