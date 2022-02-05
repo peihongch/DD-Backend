@@ -74,11 +74,13 @@ public class SessionController {
     @OnError
     public void onError(Session session, Throwable throwable) {
         try {
+            if (throwable.getMessage() != null) {
+                log.error("连接出现异常：{}", throwable.getMessage());
+            }
             session.close();
         } catch (IOException e) {
             log.error("退出发生异常：{}", e.getMessage());
         }
-        log.error("连接出现异常：{}", throwable.getMessage());
     }
 
 }
