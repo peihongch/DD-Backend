@@ -8,7 +8,6 @@ spring:
     #    bootstrap-servers: kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: ddBackend
       enable-auto-commit: true
       auto-commit-interval: 100ms
       properties:
