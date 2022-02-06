@@ -3,10 +3,7 @@ package com.dongdong.backend.entity;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -15,6 +12,10 @@ import javax.persistence.Table;
 public class FriendApply {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     @Column(name = "userId")
     private Long userId;
 

@@ -2,10 +2,10 @@ package com.dongdong.backend.controllers;
 
 import com.dongdong.backend.entity.Response;
 import com.dongdong.backend.entity.User;
+import com.dongdong.backend.entity.UserVo;
 import com.dongdong.backend.services.SessionService;
 import com.dongdong.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -27,11 +27,12 @@ public class UserController {
      * @param password
      * @return
      */
-    @GetMapping("/register-email")
+    @PostMapping("/register-email")
     public Response registerByEmail(@RequestParam(name = "email") String email,
-                           @RequestParam(name = "password") String password){
+                           @RequestParam(name = "password") String password,
+                                    @RequestParam(name = "userName") String userName){
 
-        Long userId=userService.signInByEmail(email,password);
+        Long userId=userService.signInByEmail(email,password,userName);
         sessionService.register(userId.toString());
         return Response.succeed(userId);
     }
@@ -42,11 +43,12 @@ public class UserController {
      * @param password
      * @return
      */
-    @GetMapping("/register-phone")
+    @PostMapping("/register-phone")
     public Response registerByPhone(@RequestParam(name = "phone") String phone,
-                                  @RequestParam(name = "password") String password){
+                                  @RequestParam(name = "password") String password,
+                                    @RequestParam(name = "userName") String userName){
 
-        Long userId=userService.signInByPhone(phone,password);
+        Long userId=userService.signInByPhone(phone,password,userName);
         sessionService.register(userId.toString());
         return Response.succeed(userId);
     }
@@ -76,8 +78,9 @@ public class UserController {
      * @return
      */
     @GetMapping("/get-information")
-    public Response getInformation(@RequestParam(name = "userId") String userId){
-        User user=userService.getUser(userId);
+    public Response getInformation(@RequestParam(name = "userId") String userId,HttpSession httpSession){
+        User u= (User) httpSession.getAttribute("user");
+        UserVo user=userService.getUser(userId,u.getUserId());
         if(user==null){
             return Response.error("该用户不存在或获取失败");
         }else{
@@ -102,12 +105,13 @@ public class UserController {
      * @return
      */
     @GetMapping("/search-id")
-    public Response searchById(@RequestParam(name = "userId") String userId){
-        User user=userService.getUser(userId);
-        if(user==null){
+    public Response searchById(@RequestParam(name = "userId") String userId,HttpSession httpSession){
+        User user= (User) httpSession.getAttribute("user");
+        UserVo userVo=userService.getUser(userId,user.getUserId());
+        if(userVo==null){
             return Response.error("该用户不存在或获取失败");
         }else{
-            return Response.succeed(user);
+            return Response.succeed(userVo);
         }
     }
 
@@ -117,15 +121,31 @@ public class UserController {
      * @return
      */
     @GetMapping("/search-name")
-    public Response searchByName(@RequestParam(name = "userName") String userName){
-        List<User> user=userService.searchUser(userName);
-        if(user==null){
+    public Response searchByName(@RequestParam(name = "userName") String userName,HttpSession httpSession){
+        User user= (User) httpSession.getAttribute("user");
+        List<UserVo> users=userService.searchUser(userName,user.getUserId());
+        if(users==null){
             return Response.error("该用户不存在或获取失败");
         }else{
-            return Response.succeed(user);
+            return Response.succeed(users);
         }
     }
 
+    @PostMapping("/set-information")
+    public Response setInformation(@RequestParam(name = "userId") String userId,
+                                   @RequestParam(name = "userName") String userName,
+                                   @RequestParam(name = "password") String password,
+                                   @RequestParam(name = "email")String email,
+                                   @RequestParam(name = "phone") String phone,
+                                   @RequestParam(name = "age") int age,
+                                   @RequestParam(name = "gender") int gender){
+        boolean res=userService.setUser(userId,userName,password,email,phone,age,gender);
+        if(res){
+            return Response.succeed("修改成功。");
+        }else{
+            return Response.error("修改失败。");
+        }
+    }
 
 
 }

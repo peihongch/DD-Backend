@@ -1,6 +1,7 @@
 package com.dongdong.backend.controllers;
 
 import com.dongdong.backend.entity.Friend;
+import com.dongdong.backend.entity.FriendApply;
 import com.dongdong.backend.entity.Response;
 import com.dongdong.backend.services.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/friends")
+@RequestMapping("/friend")
 public class FriendController {
 
     @Autowired
@@ -127,6 +128,16 @@ public class FriendController {
             return Response.succeed("解除拉黑成功。");
         }else{
             return Response.error("解除拉黑失败。");
+        }
+    }
+
+    @GetMapping("/get-apply-list")
+    public Response getApplyList(@RequestParam(name = "userId") String userId){
+        List<FriendApply> res=friendService.getApplyList(userId);
+        if(res!=null){
+            return Response.succeed(res);
+        }else{
+            return Response.error("获取失败。");
         }
     }
 

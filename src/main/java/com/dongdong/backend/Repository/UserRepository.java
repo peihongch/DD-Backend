@@ -15,6 +15,5 @@ public interface UserRepository extends JpaRepository<User,Long> {
 //    @Query("insert into user (email,password) values (?1,?2)")
 //    int addUserByEmail(String email,String password);
 
-    @Query("select * from user where user_name like ?1")
-    List<User> searchUser(String userName);
+    List<User> findByUserNameLike(String userName);
 }

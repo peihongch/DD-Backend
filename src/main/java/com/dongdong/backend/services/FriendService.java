@@ -8,6 +8,7 @@ import com.dongdong.backend.entity.FriendApply;
 import com.dongdong.backend.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,11 +46,12 @@ public class FriendService {
         }
     }
 
+    @Transactional
     public boolean accept(String userId,String friendId){
         try{
             Long id=Long.parseLong(userId);
             Long fid=Long.parseLong(friendId);
-            friendApplyRepository.updateState(id,fid,1);
+            friendApplyRepository.setState(id,fid,1);
             Optional<User> opt=userRepository.findById(id);
             User user=opt.get();
             opt=userRepository.findById(fid);
@@ -57,11 +59,13 @@ public class FriendService {
             Friend friend=new Friend();
             friend.setFriendId(fid);
             friend.setUserId(id);
-            friend.setBlackList(0);
+            friend.setBlack(0);
             friend.setNickname(fri.getUserName());
             friendRepository.save(friend);
+            friend=new Friend();
             friend.setFriendId(id);
             friend.setUserId(fid);
+            friend.setBlack(0);
             friend.setNickname(user.getUserName());
             friendRepository.save(friend);
             return true;
@@ -76,7 +80,7 @@ public class FriendService {
         try{
             Long id=Long.parseLong(userId);
             Long fid=Long.parseLong(friendId);
-            friendApplyRepository.updateState(id,fid,2);
+            friendApplyRepository.setState(id,fid,2);
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -96,12 +100,13 @@ public class FriendService {
         }
     }
 
+    @Transactional
     public boolean delete(String userId,String friendId){
         try{
             Long id=Long.parseLong(userId);
             Long fid=Long.parseLong(friendId);
-            friendRepository.delete(id,fid);
-            friendRepository.delete(fid,id);
+            friendRepository.deleteByUserIdAndFriendId(id,fid);
+            friendRepository.deleteByUserIdAndFriendId(fid,id);
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -110,6 +115,7 @@ public class FriendService {
 
     }
 
+    @Transactional
     public boolean black(String userId,String friendId){
         try{
             Long id=Long.parseLong(userId);
@@ -122,6 +128,7 @@ public class FriendService {
         }
     }
 
+    @Transactional
     public boolean deblack(String userId,String friendId){
         try{
             Long id=Long.parseLong(userId);
@@ -131,6 +138,17 @@ public class FriendService {
         }catch (Exception e){
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public List<FriendApply> getApplyList(String userId){
+        try {
+            Long id=Long.parseLong(userId);
+            List<FriendApply> friends=friendApplyRepository.getFriendApplyByFriendId(id);
+            return friends;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 }
