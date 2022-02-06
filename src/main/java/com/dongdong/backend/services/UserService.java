@@ -26,6 +26,12 @@ public class UserService {
         user.setPassword(password);
         user.setUserName(userName);
         User res=userRepository.save(user);
+        Friend friend=new Friend();
+        friend.setFriendId(Long.parseLong("999"));
+        friend.setUserId(res.getUserId());
+        friend.setBlack(0);
+        friend.setNickname("管理员");
+        friendRepository.save(friend);
         return res.getUserId();
     }
 
@@ -35,6 +41,12 @@ public class UserService {
         user.setPassword(password);
         user.setUserName(userName);
         User res=userRepository.save(user);
+        Friend friend=new Friend();
+        friend.setFriendId(Long.parseLong("999"));
+        friend.setUserId(res.getUserId());
+        friend.setBlack(0);
+        friend.setNickname("管理员");
+        friendRepository.save(friend);
         return res.getUserId();
     }
 
