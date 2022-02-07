@@ -24,3 +24,11 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer #值的序列化类
     admin:
       client-id: ddBackend
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/dongdong?characterEncoding=utf8
+    username: root
+    password: 123123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
