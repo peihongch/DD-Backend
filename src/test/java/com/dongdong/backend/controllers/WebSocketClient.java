@@ -18,7 +18,7 @@ public class WebSocketClient {
 
     @OnMessage
     public void onMessage(String message) {
-        System.out.println(message);
+        System.out.printf(">> receive: %s\n", message);
     }
 
     public void sendMessage(String str) {

@@ -15,7 +15,7 @@ public class Response {
         return response;
     }
 
-    public static Response error(String msg){
+    public static Response error(String msg) {
         Response response = new Response();
         response.setCode(1);
         response.setData(msg);

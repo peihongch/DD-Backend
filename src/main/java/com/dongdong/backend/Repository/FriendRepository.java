@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface FriendRepository extends JpaRepository<Friend,Long> {
+public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     List<Friend> getFriendByUserId(Long userId);
 
@@ -20,8 +20,8 @@ public interface FriendRepository extends JpaRepository<Friend,Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "update friend_list set black_list=?3 where user_id=?1 and friend_id=?2",nativeQuery = true)
+    @Query(value = "update friend_list set black_list=?3 where user_id=?1 and friend_id=?2", nativeQuery = true)
     void setBlackList(Long userId, Long friendId, int black);
 
-    Friend getFriendByUserIdAndFriendId(Long userId,Long friendId);
+    Friend getFriendByUserIdAndFriendId(Long userId, Long friendId);
 }

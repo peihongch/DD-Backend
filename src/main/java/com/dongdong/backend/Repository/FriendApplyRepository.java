@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface FriendApplyRepository extends JpaRepository<FriendApply,Long> {
+public interface FriendApplyRepository extends JpaRepository<FriendApply, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "update friend_apply set state=:state where user_id=:uid and friend_id=:fid",nativeQuery = true)
+    @Query(value = "update friend_apply set state=:state where user_id=:uid and friend_id=:fid", nativeQuery = true)
     void setState(@Param("uid") Long userId, @Param("fid") Long friendId, @Param("state") int state);
 
     List<FriendApply> getFriendApplyByFriendId(Long friendId);

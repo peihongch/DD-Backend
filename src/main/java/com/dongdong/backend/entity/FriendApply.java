@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @DynamicInsert
-@Table(name="friend_apply")
+@Table(name = "friend_apply")
 public class FriendApply {
 
     @Id
@@ -28,5 +28,6 @@ public class FriendApply {
     @Column(name = "state")
     private int state;
 
-    public FriendApply(){}
+    public FriendApply() {
+    }
 }
