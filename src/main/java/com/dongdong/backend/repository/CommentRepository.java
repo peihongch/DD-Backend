@@ -11,13 +11,13 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpecificationExecutor<Comment> {
 
-    Comment findById(long id);
+    Comment findByCommentId(long id);
 
-    List<Comment> findAllById(List<Long> ids);
+    List<Comment> findAllByCommentIdIn(List<Long> ids);
 
-    void deleteById(long id);
+    void deleteByCommentId(long id);
 
-    void deleteAllById(List<Long> ids);
+    void deleteAllByCommentIdIn(List<Long> ids);
 
     void deleteByBlogId(long blogId);
 

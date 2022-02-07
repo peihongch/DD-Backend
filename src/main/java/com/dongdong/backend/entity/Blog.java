@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name="blog")
@@ -17,14 +18,17 @@ public class Blog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private Long id;
+    @Column(name="blog_id")
+    private Long blogId;
 
-    @Column(name="userId")
+    @Column(name="user_id")
     private Long userId;
 
+    @Column(name="owner_id")
+    private Long ownerId;
+
     @Column(name="timestamp")
-    private String timestamp;
+    private Timestamp timestamp;
 
     @Column(name="context")
     private String context;

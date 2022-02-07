@@ -12,12 +12,12 @@ import java.util.Optional;
 @Repository
 public interface BlogRepository extends JpaRepository<Blog,Long>, JpaSpecificationExecutor<Blog> {
 
-    Optional<Blog> findById(Long Id);
+    Optional<Blog> findByBlogId(Long Id);
 
     List<Blog> findByUserIdOrderByTimestamp(long userId);
 
-    List<Blog> findAllByUserIdOrderByTimestamp(List<Long> ids);
+    List<Blog> findAllByUserIdInOrderByTimestamp(List<Long> ids);
 
-    void deleteById(long id);
+    void deleteByBlogId(long id);
 
 }

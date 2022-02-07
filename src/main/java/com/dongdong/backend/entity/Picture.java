@@ -18,10 +18,10 @@ public class Picture {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private Long id;
+    @Column(name="picture_id")
+    private Long pictureId;
 
-    @Column(name="blogId")
+    @Column(name="blog_id")
     private Long blogId;
 
     @Column(name="pic")

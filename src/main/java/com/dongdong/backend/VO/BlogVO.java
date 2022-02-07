@@ -1,9 +1,6 @@
-package com.dongdong.backend.entity;
+package com.dongdong.backend.VO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;

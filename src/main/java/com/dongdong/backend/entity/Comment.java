@@ -10,30 +10,30 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name="comments")
 @Data
-@Builder
 @AllArgsConstructor
 public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private Long id;
+    @Column(name="comment_id")
+    private Long commentId;
 
-    @Column(name="userId")
+    @Column(name="user_id")
     private Long userId;
 
-    @Column(name="blogId")
+    @Column(name="blog_id")
     private Long blogId;
 
     @Column(name="context")
-    private  String context;
+    private String context;
 
     @Column(name="timestamp")
-    private String timestamp;
+    private Timestamp timestamp;
 
     public Comment() {
 
