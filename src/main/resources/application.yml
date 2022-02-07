@@ -1,14 +1,13 @@
 server:
   servlet:
     context-path: /dd
-zookeeper:
-  address: 127.0.0.1:2181
-  timeout: 4000
 spring:
+  profiles:
+    active: @profiles.active@
   kafka:
-    bootstrap-servers: 127.0.0.1:9092
+    #    bootstrap-servers: kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
+    bootstrap-servers: localhost:9092
     consumer:
-      group-id: ddBackend
       enable-auto-commit: true
       auto-commit-interval: 100ms
       properties:
