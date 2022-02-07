@@ -1,14 +1,11 @@
 package com.dongdong.backend.services;
 
 
-import com.dongdong.backend.VO.BlogVO;
-import com.dongdong.backend.VO.CommentVO;
-import com.dongdong.backend.VO.NewBlogVO;
+import com.dongdong.backend.entity.BlogVO;
+import com.dongdong.backend.entity.CommentVO;
+import com.dongdong.backend.entity.NewBlogVO;
 import com.dongdong.backend.entity.*;
-import com.dongdong.backend.repository.BlogRepository;
-import com.dongdong.backend.repository.CommentRepository;
-import com.dongdong.backend.repository.LikeRepository;
-import com.dongdong.backend.repository.PictureRepository;
+import com.dongdong.backend.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,27 +26,41 @@ public class SpaceServiceImpl implements SpaceService {
     PictureRepository pictureRepository;
     @Autowired
     CommentRepository commentRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    FriendRepository friendRepository;
+
 
     @Override
     public List<BlogVO> showAll(String userId) {
-
-        return null;
-    }
-
-    @Override
-    public List<BlogVO> showBlogs(String id) {
+        List<Friend> friends=friendRepository.getFriendByUserId(Long.valueOf(userId));
+        List<Long> ids=new ArrayList<>();
+        for(Friend friend : friends){
+            ids.add(Long.valueOf(friend.getFriendId()));
+        }
+        ids.add(Long.valueOf(userId));
+        List<Blog> blogs=blogRepository.findAllByUserIdInOrderByTimestamp(ids);
         List<BlogVO> results=new ArrayList<>();
-        List<Blog> blogs=blogRepository.findByUserIdOrderByTimestamp(Long.valueOf(id));
         for(Blog blog : blogs){
-            String userId=String.valueOf(blog.getUserId());
             String blogId=String.valueOf(blog.getBlogId());
+            String ownerId=String.valueOf(blog.getOwnerId());
+            String timestamp=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(blog.getTimestamp());
+            User user=userRepository.findByUserId(blog.getUserId()).get();
+            User owner=userRepository.findByUserId(blog.getOwnerId()).get();
             List<Picture> pics=pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
             List<Comment> coms=commentRepository.findByBlogIdOrderByTimestamp(Long.valueOf(blogId));
-            List<String> comments= new ArrayList<>();
+            List<CommentVO> comments= new ArrayList<>();
             List<String> pictures= new ArrayList<>();
             if (comments.size()!=0){
                 for (Comment comment :coms){
-                    comments.add(comment.getContext());
+                    CommentVO commentVO =new CommentVO();
+                    commentVO.setCommentId(String.valueOf(comment.getCommentId()));
+                    commentVO.setContext(comment.getContext());
+                    commentVO.setTimestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(comment.getTimestamp()));
+                    commentVO.setUserId(String.valueOf(comment.getUserId()));
+                    User commenter =userRepository.findByUserId(Long.valueOf(comment.getUserId())).get();
+                    commentVO.setUserName(commenter.getUserName());
                 }
             }
             if (pictures.size()!=0){
@@ -58,21 +69,85 @@ public class SpaceServiceImpl implements SpaceService {
                 }
             }
             boolean liked=false;
-            if(likeRepository.existsByBlogIdAndUserId(blog.getBlogId(),blog.getUserId())){
+            if(likeRepository.existsByBlogIdAndUserId(blog.getBlogId(),Long.valueOf(userId))){
                 liked=true;
             }
-//            results.add(new BlogVO(userId,blogId,blog.getTimestamp(),blog.getContext(),pictures,comments,blog.getLikes(),liked));
+            BlogVO blogVO =new BlogVO();
+            blogVO.setUserId(String.valueOf(blog.getUserId()));
+            blogVO.setUserName(user.getUserName());
+            blogVO.setOwnerId(ownerId);
+            blogVO.setOwnerName(owner.getUserName());
+            blogVO.setBlogId(blogId);
+            blogVO.setPics(pictures);
+            blogVO.setComments(comments);
+            blogVO.setLikes(blog.getLikes());
+            blogVO.setLiked(liked);
+            blogVO.setTimestamp(timestamp);
+            blogVO.setContext(blog.getContext());
+            results.add(blogVO);
         }
 
         return results;
     }
 
     @Override
-    public void addBlog(NewBlogVO newBlogVO) {
+    public List<BlogVO> showBlogs(String userId,String friendId) {
+        User user=userRepository.findByUserId(Long.valueOf(friendId)).get();
+        List<BlogVO> results=new ArrayList<>();
+        List<Blog> blogs=blogRepository.findByUserIdOrderByTimestamp(Long.valueOf(friendId));
+        for(Blog blog : blogs){
+            String blogId=String.valueOf(blog.getBlogId());
+            String ownerId=String.valueOf(blog.getOwnerId());
+            String timestamp=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(blog.getTimestamp());
+            User owner=userRepository.findByUserId(Long.valueOf(ownerId)).get();
+            List<Picture> pics=pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
+            List<Comment> coms=commentRepository.findByBlogIdOrderByTimestamp(Long.valueOf(blogId));
+            List<CommentVO> comments= new ArrayList<>();
+            List<String> pictures= new ArrayList<>();
+            if (comments.size()!=0){
+                for (Comment comment :coms){
+                    CommentVO commentVO =new CommentVO();
+                    commentVO.setCommentId(String.valueOf(comment.getCommentId()));
+                    commentVO.setContext(comment.getContext());
+                    commentVO.setTimestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(comment.getTimestamp()));
+                    commentVO.setUserId(String.valueOf(comment.getUserId()));
+                    User commenter =userRepository.findByUserId(Long.valueOf(comment.getUserId())).get();
+                    commentVO.setUserName(commenter.getUserName());
+                }
+            }
+            if (pictures.size()!=0){
+                for (Picture picture :pics){
+                    pictures.add(picture.getPic());
+                }
+            }
+            boolean liked=false;
+            if(likeRepository.existsByBlogIdAndUserId(blog.getBlogId(),Long.valueOf(userId))){
+                liked=true;
+            }
+            BlogVO blogVO =new BlogVO();
+            blogVO.setUserId(friendId);
+            blogVO.setUserName(user.getUserName());
+            blogVO.setOwnerId(ownerId);
+            blogVO.setOwnerName(owner.getUserName());
+            blogVO.setBlogId(blogId);
+            blogVO.setPics(pictures);
+            blogVO.setComments(comments);
+            blogVO.setLikes(blog.getLikes());
+            blogVO.setLiked(liked);
+            blogVO.setTimestamp(timestamp);
+            blogVO.setContext(blog.getContext());
+            results.add(blogVO);
+        }
+
+        return results;
+    }
+
+    @Override
+    public Long addBlog(NewBlogVO newBlogVO) {
         Date date=new Date();
         Blog blog=new Blog();
         blog.setContext(newBlogVO.getContext());
-        blog.setLikes(Long.valueOf(0));
+        blog.setLikes(0);
         blog.setUserId(Long.valueOf(newBlogVO.getUserId()));
         blog.setOwnerId(Long.valueOf(newBlogVO.getUserId()));
         blog.setTimestamp(new Timestamp(date.getTime()));
@@ -87,24 +162,25 @@ public class SpaceServiceImpl implements SpaceService {
             }
             pictureRepository.saveAll(pictures);
         }
+        return blog.getBlogId();
 
     }
 
     @Override
     public void deleteBlog(String blogId) {
-        pictureRepository.deleteByBlogId(Long.valueOf(blogId));
-        commentRepository.deleteByBlogId(Long.valueOf(blogId));
-        likeRepository.deleteByBlogId(Long.valueOf(blogId));
+//        pictureRepository.deleteByBlogId(Long.valueOf(blogId));
+//        commentRepository.deleteByBlogId(Long.valueOf(blogId));
+//        likeRepository.deleteByBlogId(Long.valueOf(blogId));
         blogRepository.deleteByBlogId(Long.valueOf(blogId));
     }
 
     @Override
-    public void transferBlog(String userId, String blogId) {
+    public Long transferBlog(String userId, String blogId) {
         Date date=new Date();
         Blog source=blogRepository.findByBlogId(Long.valueOf(blogId)).get();
         Blog blog = new Blog();
         blog.setTimestamp(new Timestamp(date.getTime()));
-        blog.setLikes(Long.valueOf(0));
+        blog.setLikes(0);
         blog.setContext(source.getContext());
         blog.setUserId(Long.valueOf(userId));
         blog.setOwnerId(source.getOwnerId());
@@ -118,27 +194,28 @@ public class SpaceServiceImpl implements SpaceService {
             newPictures.add(pic);
         }
         pictureRepository.saveAll(newPictures);
-
+        return blog.getBlogId();
     }
 
     @Override
-    public void likeBlog(String userId, String blogId) {
+    public Long likeBlog(String userId, String blogId) {
         Blog blog=blogRepository.findByBlogId(Long.valueOf(blogId)).get();
-        long likes=blog.getLikes();
+        int likes=blog.getLikes();
         likes++;
         blog.setLikes(likes);
         blogRepository.save(blog);
         Like like=new Like();
         like.setBlogId(Long.valueOf(blogId));
         like.setUserId(Long.valueOf(userId));
-        likeRepository.save(like);
+        like=likeRepository.save(like);
+        return like.getLikeId();
     }
 
     @Override
     public void dislikeBlog(String userId, String blogId) {
         likeRepository.deleteByBlogIdAndUserId(Long.valueOf(blogId),Long.valueOf(userId));
         Blog blog=blogRepository.findByBlogId(Long.valueOf(blogId)).get();
-        long likes=blog.getLikes();
+        int likes=blog.getLikes();
         if(likes==0){
             likes=0;
         }

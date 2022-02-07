@@ -1,4 +1,4 @@
-package com.dongdong.backend.VO;
+package com.dongdong.backend.entity;
 
 
 import com.dongdong.backend.entity.Comment;

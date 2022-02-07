@@ -15,10 +15,10 @@ public class Friend {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "userId")
+    @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "friendId")
+    @Column(name = "friend_id")
     private Long friendId;
 
     @Column(name = "nickname")

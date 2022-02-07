@@ -1,8 +1,8 @@
 package com.dongdong.backend.services;
 
-import com.dongdong.backend.VO.BlogVO;
-import com.dongdong.backend.VO.CommentVO;
-import com.dongdong.backend.VO.NewBlogVO;
+import com.dongdong.backend.entity.BlogVO;
+import com.dongdong.backend.entity.CommentVO;
+import com.dongdong.backend.entity.NewBlogVO;
 
 import java.util.List;
 
@@ -10,15 +10,15 @@ public interface SpaceService {
 
     List<BlogVO> showAll(String userId);
 
-    List<BlogVO> showBlogs(String ownerId);
+    List<BlogVO> showBlogs(String userId,String friendId);
 
-    void addBlog(NewBlogVO newBlogVO);
+    Long addBlog(NewBlogVO newBlogVO);
 
     void deleteBlog(String blogId);
 
-    void transferBlog(String userId, String blogId);
+    Long transferBlog(String userId, String blogId);
 
-    void likeBlog(String userId,String blogId);
+    Long likeBlog(String userId,String blogId);
 
     void dislikeBlog(String userId, String blogId);
 

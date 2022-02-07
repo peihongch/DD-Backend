@@ -34,7 +34,7 @@ public class Blog {
     private String context;
 
     @Column(name="likes")
-    private Long likes;
+    private int likes;
 
     public Blog() {
 
