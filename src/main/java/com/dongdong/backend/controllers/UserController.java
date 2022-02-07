@@ -134,12 +134,11 @@ public class UserController {
     @PostMapping("/set-information")
     public Response setInformation(@RequestParam(name = "userId") String userId,
                                    @RequestParam(name = "userName") String userName,
-                                   @RequestParam(name = "password") String password,
                                    @RequestParam(name = "email")String email,
                                    @RequestParam(name = "phone") String phone,
                                    @RequestParam(name = "age") int age,
                                    @RequestParam(name = "gender") int gender){
-        boolean res=userService.setUser(userId,userName,password,email,phone,age,gender);
+        boolean res=userService.setUser(userId,userName,email,phone,age,gender);
         if(res){
             return Response.succeed("修改成功。");
         }else{

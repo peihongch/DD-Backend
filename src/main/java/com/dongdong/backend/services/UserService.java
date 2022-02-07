@@ -27,7 +27,7 @@ public class UserService {
         user.setUserName(userName);
         User res=userRepository.save(user);
         Friend friend=new Friend();
-        friend.setFriendId(Long.parseLong("999"));
+        friend.setFriendId(Long.parseLong("9999"));
         friend.setUserId(res.getUserId());
         friend.setBlack(0);
         friend.setNickname("管理员");
@@ -42,7 +42,7 @@ public class UserService {
         user.setUserName(userName);
         User res=userRepository.save(user);
         Friend friend=new Friend();
-        friend.setFriendId(Long.parseLong("999"));
+        friend.setFriendId(Long.parseLong("9999"));
         friend.setUserId(res.getUserId());
         friend.setBlack(0);
         friend.setNickname("管理员");
@@ -119,12 +119,11 @@ public class UserService {
 
     }
 
-    public boolean setUser(String userId,String userName,String password,String email,String phone,int age,int gender){
+    public boolean setUser(String userId,String userName,String email,String phone,int age,int gender){
         try{
             User user=new User();
             user.setUserId(Long.parseLong(userId));
             user.setUserName(userName);
-            user.setPassword(password);
             user.setEmail(email);
             user.setPhone(phone);
             user.setAge(age);
