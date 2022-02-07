@@ -7,6 +7,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.websocket.EncodeException;
 import java.io.IOException;
+import java.util.List;
 
 public interface SessionService {
 

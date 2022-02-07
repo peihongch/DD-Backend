@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @DynamicInsert
-@Table(name="friend_list")
+@Table(name = "friend_list")
 public class Friend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,5 +27,6 @@ public class Friend {
     @Column(name = "blackList")
     private int black;
 
-    public Friend(){}
+    public Friend() {
+    }
 }

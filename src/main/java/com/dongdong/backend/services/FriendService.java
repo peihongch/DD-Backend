@@ -25,128 +25,128 @@ public class FriendService {
     @Autowired
     private FriendApplyRepository friendApplyRepository;
 
-    public boolean apply(String userId,String friendId,String msg){
-        try{
-            Long id=Long.parseLong(userId);
-            Long fid=Long.parseLong(friendId);
-            if(userRepository.existsById(id) && userRepository.existsById(fid)){
-                FriendApply friendApply=new FriendApply();
+    public boolean apply(String userId, String friendId, String msg) {
+        try {
+            Long id = Long.parseLong(userId);
+            Long fid = Long.parseLong(friendId);
+            if (userRepository.existsById(id) && userRepository.existsById(fid)) {
+                FriendApply friendApply = new FriendApply();
                 friendApply.setUserId(id);
                 friendApply.setFriendId(fid);
                 friendApply.setMsg(msg);
                 friendApply.setState(0);
                 friendApplyRepository.save(friendApply);
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
     @Transactional
-    public boolean accept(String userId,String friendId){
-        try{
-            Long id=Long.parseLong(userId);
-            Long fid=Long.parseLong(friendId);
-            friendApplyRepository.setState(id,fid,1);
-            Optional<User> opt=userRepository.findById(id);
-            User user=opt.get();
-            opt=userRepository.findById(fid);
-            User fri=opt.get();
-            Friend friend=new Friend();
+    public boolean accept(String userId, String friendId) {
+        try {
+            Long id = Long.parseLong(userId);
+            Long fid = Long.parseLong(friendId);
+            friendApplyRepository.setState(id, fid, 1);
+            Optional<User> opt = userRepository.findById(id);
+            User user = opt.get();
+            opt = userRepository.findById(fid);
+            User fri = opt.get();
+            Friend friend = new Friend();
             friend.setFriendId(fid);
             friend.setUserId(id);
             friend.setBlack(0);
             friend.setNickname(fri.getUserName());
             friendRepository.save(friend);
-            friend=new Friend();
+            friend = new Friend();
             friend.setFriendId(id);
             friend.setUserId(fid);
             friend.setBlack(0);
             friend.setNickname(user.getUserName());
             friendRepository.save(friend);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
 
     }
 
-    public boolean refuse(String userId,String friendId){
-        try{
-            Long id=Long.parseLong(userId);
-            Long fid=Long.parseLong(friendId);
-            friendApplyRepository.setState(id,fid,2);
-            return true;
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-
-    }
-
-    public List<Friend> getFriendList(String userId){
+    public boolean refuse(String userId, String friendId) {
         try {
-            Long id=Long.parseLong(userId);
-            List<Friend> friends=friendRepository.getFriendByUserId(id);
+            Long id = Long.parseLong(userId);
+            Long fid = Long.parseLong(friendId);
+            friendApplyRepository.setState(id, fid, 2);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public List<Friend> getFriendList(String userId) {
+        try {
+            Long id = Long.parseLong(userId);
+            List<Friend> friends = friendRepository.getFriendByUserId(id);
             return friends;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
     @Transactional
-    public boolean delete(String userId,String friendId){
-        try{
-            Long id=Long.parseLong(userId);
-            Long fid=Long.parseLong(friendId);
-            friendRepository.deleteByUserIdAndFriendId(id,fid);
-            friendRepository.deleteByUserIdAndFriendId(fid,id);
-            return true;
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-
-    }
-
-    @Transactional
-    public boolean black(String userId,String friendId){
-        try{
-            Long id=Long.parseLong(userId);
-            Long fid=Long.parseLong(friendId);
-            friendRepository.setBlackList(id,fid,1);
-            return true;
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    @Transactional
-    public boolean deblack(String userId,String friendId){
-        try{
-            Long id=Long.parseLong(userId);
-            Long fid=Long.parseLong(friendId);
-            friendRepository.setBlackList(id,fid,0);
-            return true;
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public List<FriendApply> getApplyList(String userId){
+    public boolean delete(String userId, String friendId) {
         try {
-            Long id=Long.parseLong(userId);
-            List<FriendApply> friends=friendApplyRepository.getFriendApplyByFriendId(id);
+            Long id = Long.parseLong(userId);
+            Long fid = Long.parseLong(friendId);
+            friendRepository.deleteByUserIdAndFriendId(id, fid);
+            friendRepository.deleteByUserIdAndFriendId(fid, id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    @Transactional
+    public boolean black(String userId, String friendId) {
+        try {
+            Long id = Long.parseLong(userId);
+            Long fid = Long.parseLong(friendId);
+            friendRepository.setBlackList(id, fid, 1);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Transactional
+    public boolean deblack(String userId, String friendId) {
+        try {
+            Long id = Long.parseLong(userId);
+            Long fid = Long.parseLong(friendId);
+            friendRepository.setBlackList(id, fid, 0);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<FriendApply> getApplyList(String userId) {
+        try {
+            Long id = Long.parseLong(userId);
+            List<FriendApply> friends = friendApplyRepository.getFriendApplyByFriendId(id);
             return friends;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
