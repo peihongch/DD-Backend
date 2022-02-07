@@ -23,15 +23,16 @@ public class UserVo {
 
     private boolean isBlacked;
 
-    public UserVo(){}
+    public UserVo() {
+    }
 
-    public UserVo(User user){
-        this.userId=user.getUserId();
-        this.email=user.getEmail();
-        this.phone=user.getPhone();
-        this.userName=user.getUserName();
-        this.age=user.getAge();
-        this.gender=user.getGender();
+    public UserVo(User user) {
+        this.userId = user.getUserId();
+        this.email = user.getEmail();
+        this.phone = user.getPhone();
+        this.userName = user.getUserName();
+        this.age = user.getAge();
+        this.gender = user.getGender();
     }
 
 

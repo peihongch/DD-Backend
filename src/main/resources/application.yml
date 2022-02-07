@@ -5,8 +5,6 @@ spring:
   profiles:
     active: @profiles.active@
   kafka:
-    #    bootstrap-servers: kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
-    bootstrap-servers: localhost:9092
     consumer:
       enable-auto-commit: true
       auto-commit-interval: 100ms
@@ -23,10 +21,6 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer #值的序列化类
     admin:
       client-id: ddBackend
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/dongdong?characterEncoding=utf8
-    username: root
-    password: 123123
   jpa:
     hibernate:
       ddl-auto: update

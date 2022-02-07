@@ -1,13 +1,12 @@
 package com.dongdong.backend.entity;
 
-import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name="user")
+@Table(name = "user")
 @Data
 @DynamicInsert
 public class User {
@@ -29,13 +28,13 @@ public class User {
     @Column(name = "user_name")
     private String userName;
 
-    @Column(name="gender")
+    @Column(name = "gender")
     private int gender;
 
     @Column(name = "age")
     private int age;
 
-    public User(){
+    public User() {
 
     }
 }

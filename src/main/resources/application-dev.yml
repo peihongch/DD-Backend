@@ -1,3 +1,8 @@
 spring:
   kafka:
     bootstrap-servers: localhost:9092
+  datasource:
+    # 本地测试：docker run --name=mysql -it -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123123 -d mysql
+    url: jdbc:mysql://127.0.0.1:3306/dongdong?characterEncoding=utf8
+    username: root
+    password: 123123
