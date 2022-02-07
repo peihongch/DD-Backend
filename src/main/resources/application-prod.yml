@@ -2,6 +2,6 @@ spring:
   kafka:
     bootstrap-servers: kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
   datasource:
-    url: jdbc:mysql://mysql-cluster:6446/dongdong?characterEncoding=utf8
+    url: jdbc:mysql://mysql-cluster:6446/dongdong?characterEncoding=utf8&createDatabaseIfNotExist=true
     username: root
     password: 123456

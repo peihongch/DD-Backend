@@ -73,12 +73,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-          <groupId>org.projectlombok</groupId>
-          <artifactId>lombok</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
         </dependency>
     </dependencies>
 
@@ -94,7 +94,8 @@
                         <publish>false</publish>
                         <builder>paketobuildpacks/builder:tiny</builder>
                         <env>
-                            <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                            <!-- <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE> -->
+                            <BP_NATIVE_IMAGE>false</BP_NATIVE_IMAGE>
                         </env>
                     </image>
                 </configuration>

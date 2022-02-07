@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0.27
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "123456"
+          livenessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            exec:
+              command: [ "mysqladmin", "-uroot", "-p${MYSQL_ROOT_PASSWORD}", "ping" ]
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            exec:
+              command: [ "mysqladmin", "-uroot", "-p${MYSQL_ROOT_PASSWORD}", "ping" ]
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+            - name: mysql-config
+              mountPath: /etc/mysql/conf.d/my.cnf
+              subPath: my.cnf
+            - name: localtime
+              readOnly: true
+              mountPath: /etc/localtime
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+        - name: mysql-config
+          configMap:
+            name: mysql-config
+        - name: localtime
+          hostPath:
+            type: File
+            path: /etc/localtime
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  labels:
+    app: mysql
+spec:
+  type: NodePort
+  ports:
+    - name: mysql
+      # port是暴露在cluster ip上的端口，:port提供了集群内部客户端访问service的入口，即clusterIP:port
+      port: 3306
+      # nodePort提供了集群外部客户端访问service的一种方式，:nodePort提供了集群外部客户端访问service的端口，即nodeIP:nodePort提供了外部流量访问k8s集群中service的入口
+      nodePort: 30306
+      # targetPort是pod上的端口，从port/nodePort上来的数据，经过kube-proxy流入到后端pod的targetPort上，最后进入容器
+      targetPort: 3306
+  selector:
+    app: mysql
+  # 单实例MySQL，让DNS直接解析为Pod的IP地址，即headless service
+  clusterIP: 10.98.5.211
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  storageClassName: longhorn
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage:
+        1Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  labels:
+    app: mysql
+data:
+  my.cnf: |-
+    [client]
+    default-character-set=utf8mb4
+    [mysql]
+    default-character-set=utf8mb4
+    [mysqld] 
+    max_connections = 2000
+    secure_file_priv=/var/lib/mysql
+    sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
