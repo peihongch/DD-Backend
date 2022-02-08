@@ -52,7 +52,7 @@ public class SpaceServiceImpl implements SpaceService {
             List<Comment> coms=commentRepository.findByBlogIdOrderByTimestamp(Long.valueOf(blogId));
             List<CommentVO> comments= new ArrayList<>();
             List<String> pictures= new ArrayList<>();
-            if (comments.size()!=0){
+            if (coms.size()!=0){
                 for (Comment comment :coms){
                     CommentVO commentVO =new CommentVO();
                     commentVO.setCommentId(String.valueOf(comment.getCommentId()));
@@ -61,6 +61,7 @@ public class SpaceServiceImpl implements SpaceService {
                     commentVO.setUserId(String.valueOf(comment.getUserId()));
                     User commenter =userRepository.findByUserId(Long.valueOf(comment.getUserId())).get();
                     commentVO.setUserName(commenter.getUserName());
+                    comments.add(commentVO);
                 }
             }
             if (pictures.size()!=0){
@@ -104,7 +105,7 @@ public class SpaceServiceImpl implements SpaceService {
             List<Comment> coms=commentRepository.findByBlogIdOrderByTimestamp(Long.valueOf(blogId));
             List<CommentVO> comments= new ArrayList<>();
             List<String> pictures= new ArrayList<>();
-            if (comments.size()!=0){
+            if (coms.size()!=0){
                 for (Comment comment :coms){
                     CommentVO commentVO =new CommentVO();
                     commentVO.setCommentId(String.valueOf(comment.getCommentId()));
@@ -113,6 +114,7 @@ public class SpaceServiceImpl implements SpaceService {
                     commentVO.setUserId(String.valueOf(comment.getUserId()));
                     User commenter =userRepository.findByUserId(Long.valueOf(comment.getUserId())).get();
                     commentVO.setUserName(commenter.getUserName());
+                    comments.add(commentVO);
                 }
             }
             if (pictures.size()!=0){
