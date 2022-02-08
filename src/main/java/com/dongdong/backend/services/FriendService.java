@@ -5,11 +5,13 @@ import com.dongdong.backend.Repository.FriendRepository;
 import com.dongdong.backend.Repository.UserRepository;
 import com.dongdong.backend.entity.Friend;
 import com.dongdong.backend.entity.FriendApply;
+import com.dongdong.backend.entity.FriendApplyVo;
 import com.dongdong.backend.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -141,11 +143,19 @@ public class FriendService {
         }
     }
 
-    public List<FriendApply> getApplyList(String userId) {
+    public List<FriendApplyVo> getApplyList(String userId) {
         try {
             Long id = Long.parseLong(userId);
             List<FriendApply> friends = friendApplyRepository.getFriendApplyByFriendId(id);
-            return friends;
+            List<FriendApplyVo> res=new ArrayList<>();
+            for(FriendApply f:friends){
+                FriendApplyVo friendApplyVo=new FriendApplyVo(f);
+                Optional<User> opt = userRepository.findById(friendApplyVo.getUserId());
+                User user = opt.get();
+                friendApplyVo.setUserName(user.getUserName());
+                res.add(friendApplyVo);
+            }
+            return res;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
