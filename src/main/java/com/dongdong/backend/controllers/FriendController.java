@@ -1,7 +1,7 @@
 package com.dongdong.backend.controllers;
 
 import com.dongdong.backend.entity.Friend;
-import com.dongdong.backend.entity.FriendApply;
+import com.dongdong.backend.entity.FriendApplyVo;
 import com.dongdong.backend.entity.Response;
 import com.dongdong.backend.services.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,7 +140,7 @@ public class FriendController {
 
     @GetMapping("/get-apply-list")
     public Response getApplyList(@RequestParam(name = "userId") String userId) {
-        List<FriendApply> res = friendService.getApplyList(userId);
+        List<FriendApplyVo> res = friendService.getApplyList(userId);
         if (res != null) {
             return Response.succeed(res);
         } else {
