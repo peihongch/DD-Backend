@@ -170,9 +170,9 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     public void deleteBlog(String blogId) {
-//        pictureRepository.deleteByBlogId(Long.valueOf(blogId));
-//        commentRepository.deleteByBlogId(Long.valueOf(blogId));
-//        likeRepository.deleteByBlogId(Long.valueOf(blogId));
+        pictureRepository.deleteByBlogId(Long.valueOf(blogId));
+        commentRepository.deleteByBlogId(Long.valueOf(blogId));
+        likeRepository.deleteByBlogId(Long.valueOf(blogId));
         blogRepository.deleteByBlogId(Long.valueOf(blogId));
     }
 
