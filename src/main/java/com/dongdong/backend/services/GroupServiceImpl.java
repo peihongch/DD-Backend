@@ -138,10 +138,10 @@ public class GroupServiceImpl implements GroupService{
     @Override
     public void quit(Long userId, Long groupId) {
         Group group=groupRepository.findByGroupId(groupId).get();
-        if(group.getMasterId()==userId){
-            groupRepository.deleteByGroupId(groupId);
+        if(group.getMasterId().equals(userId)){
             userGroupRepository.deleteByGroupId(groupId);
             groupApplyRepository.deleteByGroupId(groupId);
+            groupRepository.deleteByGroupId(groupId);
         }
         else{
             userGroupRepository.deleteByUserIdAndGroupId(userId,groupId);
