@@ -1,10 +1,10 @@
 package com.dongdong.backend.services;
 
-import com.dongdong.backend.Repository.FriendRepository;
-import com.dongdong.backend.Repository.UserRepository;
 import com.dongdong.backend.entity.Friend;
 import com.dongdong.backend.entity.User;
 import com.dongdong.backend.entity.UserVo;
+import com.dongdong.backend.repository.FriendRepository;
+import com.dongdong.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,11 +78,7 @@ public class UserService {
             Friend friend = friendRepository.getFriendByUserIdAndFriendId(uid, id);
             if (friend != null) {
                 userVo.setFriend(true);
-                if (friend.getBlack() == 1) {
-                    userVo.setBlacked(true);
-                } else {
-                    userVo.setBlacked(false);
-                }
+                userVo.setBlacked(friend.getBlack() == 1);
             }
             return userVo;
         } catch (NumberFormatException e) {
@@ -103,11 +99,7 @@ public class UserService {
                 Friend friend = friendRepository.getFriendByUserIdAndFriendId(id, user.getUserId());
                 if (friend != null) {
                     userVo.setFriend(true);
-                    if (friend.getBlack() == 1) {
-                        userVo.setBlacked(true);
-                    } else {
-                        userVo.setBlacked(false);
-                    }
+                    userVo.setBlacked(friend.getBlack() == 1);
                 }
                 res.add(userVo);
             }

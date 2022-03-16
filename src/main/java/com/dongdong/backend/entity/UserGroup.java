@@ -9,20 +9,20 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name="user_group")
+@Table(name = "user_group")
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Long userId;
 
-    @Column(name="group_id")
+    @Column(name = "group_id")
     private Long groupId;
 
 

@@ -1,7 +1,6 @@
 package com.dongdong.backend.entity;
 
 
-import com.dongdong.backend.entity.Comment;
 import lombok.Data;
 
 @Data
@@ -17,8 +16,8 @@ public class CommentVO {
 
     private String timestamp;
 
-    public CommentVO(){
+    public CommentVO() {
 
-    };
+    }
 
 }

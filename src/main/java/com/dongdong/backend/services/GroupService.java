@@ -11,17 +11,17 @@ public interface GroupService {
 
     List<GroupVO> show(Long userId);
 
-    List<GroupSearchVO> search(Long userId,String searchKey);
+    List<GroupSearchVO> search(Long userId, String searchKey);
 
-    void join(Long userId,Long groupId,String reason);
+    void join(Long userId, Long groupId, String reason);
 
     List<GroupRequestVO> showRequest(Long userId);
 
-    void handleRequest(Long requestId,Long type);
+    void handleRequest(Long requestId, Long type);
 
-    Long create(Long userId,String groupName);
+    Long create(Long userId, String groupName);
 
     GroupInfoVO lookInfo(Long groupId);
 
-    void quit(Long userId,Long groupId);
+    void quit(Long userId, Long groupId);
 }

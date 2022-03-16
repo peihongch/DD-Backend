@@ -1,7 +1,6 @@
-package com.dongdong.backend.Repository;
+package com.dongdong.backend.repository;
 
-
-import com.dongdong.backend.entity.Comment;
+import com.dongdong.backend.entity.Picture;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -9,22 +8,26 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpecificationExecutor<Comment> {
+public interface PictureRepository extends JpaRepository<Picture, Long>, JpaSpecificationExecutor<Picture> {
 
-    Comment findByCommentId(long id);
+    Optional<Picture> findByPictureId(long id);
 
-    List<Comment> findAllByCommentIdIn(List<Long> ids);
+    List<Picture> findAllByPictureIdIn(List<Long> ids);
+
     @Modifying
     @Transactional
-    void deleteByCommentId(long id);
+    void deleteAllByPictureIdIn(List<Long> ids);
+
     @Modifying
     @Transactional
-    void deleteAllByCommentIdIn(List<Long> ids);
+    void deleteByPictureId(long id);
+
     @Modifying
     @Transactional
     void deleteByBlogId(long blogId);
 
-    List<Comment> findByBlogIdOrderByTimestamp(long blogId);
+    List<Picture> findByBlogIdOrderByPictureId(long blogId);
 }

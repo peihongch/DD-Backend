@@ -1,16 +1,13 @@
 package com.dongdong.backend.controllers;
 
-import com.dongdong.backend.entity.Friend;
 import com.dongdong.backend.entity.Message;
-import com.dongdong.backend.services.FriendService;
-import com.dongdong.backend.services.SessionService;
 import com.dongdong.backend.entity.Operation;
+import com.dongdong.backend.services.SessionService;
 import com.dongdong.backend.utils.SessionPool;
 import com.dongdong.backend.utils.TimeUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

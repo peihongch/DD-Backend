@@ -2,8 +2,6 @@ package com.dongdong.backend.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-
 @Data
 public class UserVo {
 

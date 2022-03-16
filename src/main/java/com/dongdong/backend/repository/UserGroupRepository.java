@@ -1,4 +1,4 @@
-package com.dongdong.backend.Repository;
+package com.dongdong.backend.repository;
 
 import com.dongdong.backend.entity.UserGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,17 +9,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface UserGroupRepository extends JpaRepository<UserGroup,Long> {
+public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
 
     List<UserGroup> findByUserId(Long userId);
 
-    boolean existsByUserIdAndGroupId(Long userId,Long groupId);
+    boolean existsByUserIdAndGroupId(Long userId, Long groupId);
 
     List<UserGroup> findByGroupId(Long id);
 
     @Modifying
     @Transactional
-    void deleteByUserIdAndGroupId(Long userId,Long groupId);
+    void deleteByUserIdAndGroupId(Long userId, Long groupId);
 
     @Modifying
     @Transactional
