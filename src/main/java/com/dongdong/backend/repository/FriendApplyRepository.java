@@ -19,4 +19,6 @@ public interface FriendApplyRepository extends JpaRepository<FriendApply, Long> 
     void setState(@Param("uid") Long userId, @Param("fid") Long friendId, @Param("state") int state);
 
     List<FriendApply> getFriendApplyByFriendId(Long friendId);
+
+    boolean existsByUserIdAndFriendId(Long userId, Long friendId);
 }

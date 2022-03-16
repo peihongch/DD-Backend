@@ -32,6 +32,9 @@ public class FriendService {
             Long id = Long.parseLong(userId);
             Long fid = Long.parseLong(friendId);
             if (userRepository.existsById(id) && userRepository.existsById(fid)) {
+                if(friendApplyRepository.existsByUserIdAndFriendId(id,fid) || friendApplyRepository.existsByUserIdAndFriendId(fid,id)){
+                    return false;
+                }
                 FriendApply friendApply = new FriendApply();
                 friendApply.setUserId(id);
                 friendApply.setFriendId(fid);
@@ -51,8 +54,8 @@ public class FriendService {
     @Transactional
     public boolean accept(String userId, String friendId) {
         try {
-            Long id = Long.parseLong(userId);
-            Long fid = Long.parseLong(friendId);
+            Long fid = Long.parseLong(userId);
+            Long id = Long.parseLong(friendId);
             friendApplyRepository.setState(id, fid, 1);
             Optional<User> opt = userRepository.findById(id);
             User user = opt.get();
@@ -80,8 +83,8 @@ public class FriendService {
 
     public boolean refuse(String userId, String friendId) {
         try {
-            Long id = Long.parseLong(userId);
-            Long fid = Long.parseLong(friendId);
+            Long fid = Long.parseLong(userId);
+            Long id = Long.parseLong(friendId);
             friendApplyRepository.setState(id, fid, 2);
             return true;
         } catch (Exception e) {
