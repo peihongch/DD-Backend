@@ -48,6 +48,18 @@ public class SessionController {
         log.info("有新消息： {}", message);
         try {
             var msg = Message.unmarshal(message);
+            // 判断是否是心跳消息
+            if (Message.TYPE_HEART.equals(msg.type())) {
+                var heartMsg = new Message(msg.receiver(), msg.sender(), msg.group(), Message.TYPE_HEART, TimeUtils.currentTimestamp(), msg.timestamp());
+                try {
+                    sessionService.ack(heartMsg);
+                } catch (EncodeException | IOException e) {
+                    log.error("HEART消息发送异常，异常情况: {}, {}", heartMsg, e.getMessage());
+                    e.printStackTrace();
+                }
+                return;
+            }
+
             // 发送到kafka
             var future = sessionService.send(msg.receiver(), msg.timestamp(), message);
             future.addCallback(result -> {

@@ -91,4 +91,26 @@ class SessionControllerTests {
         thread1.join();
         thread2.join();
     }
+
+    @Test
+    void heartMessage() throws URISyntaxException, InterruptedException {
+        WebSocketClient client = new WebSocketClient(new URI("ws://localhost:8080/dd/session/10001"));
+
+        var thread = new Thread(() -> {
+            int times = 10;
+            while (times-- >= 0) {
+                String msg = """
+                        {"sender":"%s","receiver":"%s","group":0,"type":"heart","timestamp":"%d"}""";
+                client.sendMessage(String.format(msg, "10001", "", System.currentTimeMillis()));
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+        thread.join();
+    }
 }
