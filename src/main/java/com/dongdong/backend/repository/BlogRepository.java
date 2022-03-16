@@ -1,4 +1,4 @@
-package com.dongdong.backend.Repository;
+package com.dongdong.backend.repository;
 
 
 import com.dongdong.backend.entity.Blog;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BlogRepository extends JpaRepository<Blog,Long>, JpaSpecificationExecutor<Blog> {
+public interface BlogRepository extends JpaRepository<Blog, Long>, JpaSpecificationExecutor<Blog> {
 
     Optional<Blog> findByBlogId(Long Id);
 

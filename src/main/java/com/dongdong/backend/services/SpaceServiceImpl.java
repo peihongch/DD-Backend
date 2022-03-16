@@ -1,11 +1,8 @@
 package com.dongdong.backend.services;
 
 
-import com.dongdong.backend.entity.BlogVO;
-import com.dongdong.backend.entity.CommentVO;
-import com.dongdong.backend.entity.NewBlogVO;
 import com.dongdong.backend.entity.*;
-import com.dongdong.backend.Repository.*;
+import com.dongdong.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,46 +31,43 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     public List<BlogVO> showAll(String userId) {
-        List<Friend> friends=friendRepository.getFriendByUserId(Long.valueOf(userId));
-        List<Long> ids=new ArrayList<>();
-        for(Friend friend : friends){
+        List<Friend> friends = friendRepository.getFriendByUserId(Long.valueOf(userId));
+        List<Long> ids = new ArrayList<>();
+        for (Friend friend : friends) {
             ids.add(Long.valueOf(friend.getFriendId()));
         }
         ids.add(Long.valueOf(userId));
-        List<Blog> blogs=blogRepository.findAllByUserIdInOrderByTimestamp(ids);
-        List<BlogVO> results=new ArrayList<>();
-        for(Blog blog : blogs){
-            String blogId=String.valueOf(blog.getBlogId());
-            String ownerId=String.valueOf(blog.getOwnerId());
-            String timestamp=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(blog.getTimestamp());
-            User user=userRepository.findByUserId(blog.getUserId()).get();
-            User owner=userRepository.findByUserId(blog.getOwnerId()).get();
-            List<Picture> pics=pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
-            List<Comment> coms=commentRepository.findByBlogIdOrderByTimestamp(Long.valueOf(blogId));
-            List<CommentVO> comments= new ArrayList<>();
-            List<String> pictures= new ArrayList<>();
-            if (coms.size()!=0){
-                for (Comment comment :coms){
-                    CommentVO commentVO =new CommentVO();
+        List<Blog> blogs = blogRepository.findAllByUserIdInOrderByTimestamp(ids);
+        List<BlogVO> results = new ArrayList<>();
+        for (Blog blog : blogs) {
+            String blogId = String.valueOf(blog.getBlogId());
+            String ownerId = String.valueOf(blog.getOwnerId());
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(blog.getTimestamp());
+            User user = userRepository.findByUserId(blog.getUserId()).get();
+            User owner = userRepository.findByUserId(blog.getOwnerId()).get();
+            List<Picture> pics = pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
+            List<Comment> coms = commentRepository.findByBlogIdOrderByTimestamp(Long.valueOf(blogId));
+            List<CommentVO> comments = new ArrayList<>();
+            List<String> pictures = new ArrayList<>();
+            if (coms.size() != 0) {
+                for (Comment comment : coms) {
+                    CommentVO commentVO = new CommentVO();
                     commentVO.setCommentId(String.valueOf(comment.getCommentId()));
                     commentVO.setContext(comment.getContext());
                     commentVO.setTimestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(comment.getTimestamp()));
                     commentVO.setUserId(String.valueOf(comment.getUserId()));
-                    User commenter =userRepository.findByUserId(Long.valueOf(comment.getUserId())).get();
+                    User commenter = userRepository.findByUserId(Long.valueOf(comment.getUserId())).get();
                     commentVO.setUserName(commenter.getUserName());
                     comments.add(commentVO);
                 }
             }
-            if (pictures.size()!=0){
-                for (Picture picture :pics){
+            if (pictures.size() != 0) {
+                for (Picture picture : pics) {
                     pictures.add(picture.getPic());
                 }
             }
-            boolean liked=false;
-            if(likeRepository.existsByBlogIdAndUserId(blog.getBlogId(),Long.valueOf(userId))){
-                liked=true;
-            }
-            BlogVO blogVO =new BlogVO();
+            boolean liked = likeRepository.existsByBlogIdAndUserId(blog.getBlogId(), Long.valueOf(userId));
+            BlogVO blogVO = new BlogVO();
             blogVO.setUserId(String.valueOf(blog.getUserId()));
             blogVO.setUserName(user.getUserName());
             blogVO.setOwnerId(ownerId);
@@ -92,41 +86,38 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
-    public List<BlogVO> showBlogs(String userId,String friendId) {
-        User user=userRepository.findByUserId(Long.valueOf(friendId)).get();
-        List<BlogVO> results=new ArrayList<>();
-        List<Blog> blogs=blogRepository.findByUserIdOrderByTimestamp(Long.valueOf(friendId));
-        for(Blog blog : blogs){
-            String blogId=String.valueOf(blog.getBlogId());
-            String ownerId=String.valueOf(blog.getOwnerId());
-            String timestamp=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(blog.getTimestamp());
-            User owner=userRepository.findByUserId(Long.valueOf(ownerId)).get();
-            List<Picture> pics=pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
-            List<Comment> coms=commentRepository.findByBlogIdOrderByTimestamp(Long.valueOf(blogId));
-            List<CommentVO> comments= new ArrayList<>();
-            List<String> pictures= new ArrayList<>();
-            if (coms.size()!=0){
-                for (Comment comment :coms){
-                    CommentVO commentVO =new CommentVO();
+    public List<BlogVO> showBlogs(String userId, String friendId) {
+        User user = userRepository.findByUserId(Long.valueOf(friendId)).get();
+        List<BlogVO> results = new ArrayList<>();
+        List<Blog> blogs = blogRepository.findByUserIdOrderByTimestamp(Long.valueOf(friendId));
+        for (Blog blog : blogs) {
+            String blogId = String.valueOf(blog.getBlogId());
+            String ownerId = String.valueOf(blog.getOwnerId());
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(blog.getTimestamp());
+            User owner = userRepository.findByUserId(Long.valueOf(ownerId)).get();
+            List<Picture> pics = pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
+            List<Comment> coms = commentRepository.findByBlogIdOrderByTimestamp(Long.valueOf(blogId));
+            List<CommentVO> comments = new ArrayList<>();
+            List<String> pictures = new ArrayList<>();
+            if (coms.size() != 0) {
+                for (Comment comment : coms) {
+                    CommentVO commentVO = new CommentVO();
                     commentVO.setCommentId(String.valueOf(comment.getCommentId()));
                     commentVO.setContext(comment.getContext());
                     commentVO.setTimestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(comment.getTimestamp()));
                     commentVO.setUserId(String.valueOf(comment.getUserId()));
-                    User commenter =userRepository.findByUserId(Long.valueOf(comment.getUserId())).get();
+                    User commenter = userRepository.findByUserId(Long.valueOf(comment.getUserId())).get();
                     commentVO.setUserName(commenter.getUserName());
                     comments.add(commentVO);
                 }
             }
-            if (pictures.size()!=0){
-                for (Picture picture :pics){
+            if (pictures.size() != 0) {
+                for (Picture picture : pics) {
                     pictures.add(picture.getPic());
                 }
             }
-            boolean liked=false;
-            if(likeRepository.existsByBlogIdAndUserId(blog.getBlogId(),Long.valueOf(userId))){
-                liked=true;
-            }
-            BlogVO blogVO =new BlogVO();
+            boolean liked = likeRepository.existsByBlogIdAndUserId(blog.getBlogId(), Long.valueOf(userId));
+            BlogVO blogVO = new BlogVO();
             blogVO.setUserId(friendId);
             blogVO.setUserName(user.getUserName());
             blogVO.setOwnerId(ownerId);
@@ -146,17 +137,17 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     public Long addBlog(NewBlogVO newBlogVO) {
-        Date date=new Date();
-        Blog blog=new Blog();
+        Date date = new Date();
+        Blog blog = new Blog();
         blog.setContext(newBlogVO.getContext());
         blog.setLikes(0);
         blog.setUserId(Long.valueOf(newBlogVO.getUserId()));
         blog.setOwnerId(Long.valueOf(newBlogVO.getUserId()));
         blog.setTimestamp(new Timestamp(date.getTime()));
-        blog=blogRepository.save(blog);
-        if(newBlogVO.getPics().size()!=0){
-            List<Picture> pictures=new ArrayList<>();
-            for (String pic:newBlogVO.getPics()){
+        blog = blogRepository.save(blog);
+        if (newBlogVO.getPics().size() != 0) {
+            List<Picture> pictures = new ArrayList<>();
+            for (String pic : newBlogVO.getPics()) {
                 Picture picture = new Picture();
                 picture.setBlogId(blog.getBlogId());
                 picture.setPic(pic);
@@ -178,8 +169,8 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     public Long transferBlog(String userId, String blogId) {
-        Date date=new Date();
-        Blog source=blogRepository.findByBlogId(Long.valueOf(blogId)).get();
+        Date date = new Date();
+        Blog source = blogRepository.findByBlogId(Long.valueOf(blogId)).get();
         Blog blog = new Blog();
         blog.setTimestamp(new Timestamp(date.getTime()));
         blog.setLikes(0);
@@ -187,10 +178,10 @@ public class SpaceServiceImpl implements SpaceService {
         blog.setUserId(Long.valueOf(userId));
         blog.setOwnerId(source.getOwnerId());
         blog = blogRepository.save(blog);
-        List<Picture> pictures=pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
-        List<Picture> newPictures=new ArrayList<>();
-        for(Picture picture : pictures){
-            Picture pic =new Picture();
+        List<Picture> pictures = pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
+        List<Picture> newPictures = new ArrayList<>();
+        for (Picture picture : pictures) {
+            Picture pic = new Picture();
             pic.setPic(picture.getPic());
             pic.setBlogId(blog.getBlogId());
             newPictures.add(pic);
@@ -201,27 +192,26 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     public Long likeBlog(String userId, String blogId) {
-        Blog blog=blogRepository.findByBlogId(Long.valueOf(blogId)).get();
-        int likes=blog.getLikes();
+        Blog blog = blogRepository.findByBlogId(Long.valueOf(blogId)).get();
+        int likes = blog.getLikes();
         likes++;
         blog.setLikes(likes);
         blogRepository.save(blog);
-        Like like=new Like();
+        Like like = new Like();
         like.setBlogId(Long.valueOf(blogId));
         like.setUserId(Long.valueOf(userId));
-        like=likeRepository.save(like);
+        like = likeRepository.save(like);
         return like.getLikeId();
     }
 
     @Override
     public void dislikeBlog(String userId, String blogId) {
-        likeRepository.deleteByBlogIdAndUserId(Long.valueOf(blogId),Long.valueOf(userId));
-        Blog blog=blogRepository.findByBlogId(Long.valueOf(blogId)).get();
-        int likes=blog.getLikes();
-        if(likes==0){
-            likes=0;
-        }
-        else{
+        likeRepository.deleteByBlogIdAndUserId(Long.valueOf(blogId), Long.valueOf(userId));
+        Blog blog = blogRepository.findByBlogId(Long.valueOf(blogId)).get();
+        int likes = blog.getLikes();
+        if (likes == 0) {
+            likes = 0;
+        } else {
             likes--;
         }
         blog.setLikes(likes);
@@ -230,14 +220,14 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     public CommentVO addComment(String userId, String blogId, String context) {
-        Comment comment =new Comment();
+        Comment comment = new Comment();
         comment.setBlogId(Long.valueOf(blogId));
-        Date date=new Date();
+        Date date = new Date();
         comment.setTimestamp(new Timestamp(date.getTime()));
         comment.setUserId(Long.valueOf(userId));
         comment.setContext(context);
-        comment=commentRepository.save(comment);
-        CommentVO commentVO=new CommentVO();
+        comment = commentRepository.save(comment);
+        CommentVO commentVO = new CommentVO();
         commentVO.setCommentId(String.valueOf(comment.getCommentId()));
         commentVO.setContext(comment.getContext());
         commentVO.setTimestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(comment.getTimestamp()));

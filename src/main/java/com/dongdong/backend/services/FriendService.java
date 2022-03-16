@@ -1,12 +1,12 @@
 package com.dongdong.backend.services;
 
-import com.dongdong.backend.Repository.FriendApplyRepository;
-import com.dongdong.backend.Repository.FriendRepository;
-import com.dongdong.backend.Repository.UserRepository;
 import com.dongdong.backend.entity.Friend;
 import com.dongdong.backend.entity.FriendApply;
 import com.dongdong.backend.entity.FriendApplyVo;
 import com.dongdong.backend.entity.User;
+import com.dongdong.backend.repository.FriendApplyRepository;
+import com.dongdong.backend.repository.FriendRepository;
+import com.dongdong.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -147,9 +147,9 @@ public class FriendService {
         try {
             Long id = Long.parseLong(userId);
             List<FriendApply> friends = friendApplyRepository.getFriendApplyByFriendId(id);
-            List<FriendApplyVo> res=new ArrayList<>();
-            for(FriendApply f:friends){
-                FriendApplyVo friendApplyVo=new FriendApplyVo(f);
+            List<FriendApplyVo> res = new ArrayList<>();
+            for (FriendApply f : friends) {
+                FriendApplyVo friendApplyVo = new FriendApplyVo(f);
                 Optional<User> opt = userRepository.findById(friendApplyVo.getUserId());
                 User user = opt.get();
                 friendApplyVo.setUserName(user.getUserName());

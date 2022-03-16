@@ -8,19 +8,19 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name="qun")
+@Table(name = "qun")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="group_id")
+    @Column(name = "group_id")
     private Long groupId;
 
-    @Column(name="group_name")
+    @Column(name = "group_name")
     private String groupName;
 
-    @Column(name="master_id")
+    @Column(name = "master_id")
     private Long masterId;
 }

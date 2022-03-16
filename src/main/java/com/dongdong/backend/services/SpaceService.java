@@ -10,7 +10,7 @@ public interface SpaceService {
 
     List<BlogVO> showAll(String userId);
 
-    List<BlogVO> showBlogs(String userId,String friendId);
+    List<BlogVO> showBlogs(String userId, String friendId);
 
     Long addBlog(NewBlogVO newBlogVO);
 
@@ -18,7 +18,7 @@ public interface SpaceService {
 
     Long transferBlog(String userId, String blogId);
 
-    Long likeBlog(String userId,String blogId);
+    Long likeBlog(String userId, String blogId);
 
     void dislikeBlog(String userId, String blogId);
 

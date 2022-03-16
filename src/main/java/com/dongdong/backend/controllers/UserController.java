@@ -8,7 +8,6 @@ import com.dongdong.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -107,7 +106,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/search-id")
-    public Response searchById(@RequestParam(name = "userId") String userId,@RequestParam(name = "ownerId") String ownerId) {
+    public Response searchById(@RequestParam(name = "userId") String userId, @RequestParam(name = "ownerId") String ownerId) {
         UserVo userVo = userService.getUser(userId, Long.parseLong(ownerId));
         if (userVo == null) {
             return Response.error("该用户不存在或获取失败");
@@ -123,7 +122,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/search-name")
-    public Response searchByName(@RequestParam(name = "userName") String userName,@RequestParam(name = "ownerId") String ownerId) {
+    public Response searchByName(@RequestParam(name = "userName") String userName, @RequestParam(name = "ownerId") String ownerId) {
         List<UserVo> users = userService.searchUser(userName, Long.parseLong(ownerId));
         if (users == null) {
             return Response.error("该用户不存在或获取失败");

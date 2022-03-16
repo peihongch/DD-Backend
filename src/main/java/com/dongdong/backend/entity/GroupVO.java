@@ -12,8 +12,8 @@ public class GroupVO {
 
     private String groupName;
 
-    public GroupVO(Group group){
-        this.groupId=group.getGroupId();
-        this.groupName=group.getGroupName();
+    public GroupVO(Group group) {
+        this.groupId = group.getGroupId();
+        this.groupName = group.getGroupName();
     }
 }

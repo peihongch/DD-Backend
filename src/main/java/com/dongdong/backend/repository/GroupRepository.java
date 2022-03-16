@@ -1,4 +1,4 @@
-package com.dongdong.backend.Repository;
+package com.dongdong.backend.repository;
 
 
 import com.dongdong.backend.entity.Group;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface GroupRepository extends JpaRepository<Group,Long>, JpaSpecificationExecutor<Group> {
+public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecificationExecutor<Group> {
 
     List<Group> findByGroupIdInOrderByGroupId(List<Long> ids);
 
