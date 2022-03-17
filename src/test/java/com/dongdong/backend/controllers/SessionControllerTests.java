@@ -2,8 +2,12 @@ package com.dongdong.backend.controllers;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
 
 class SessionControllerTests {
     @Test
@@ -93,7 +97,7 @@ class SessionControllerTests {
     }
 
     @Test
-    void heartMessage() throws URISyntaxException, InterruptedException {
+    void sendHeartMessage() throws URISyntaxException, InterruptedException {
         WebSocketClient client = new WebSocketClient(new URI("ws://localhost:8080/dd/session/10001"));
 
         var thread = new Thread(() -> {
@@ -111,6 +115,32 @@ class SessionControllerTests {
         });
         thread.setDaemon(true);
         thread.start();
+        thread.join();
+    }
+
+    @Test
+    void sendImageMessage() throws URISyntaxException, InterruptedException, IOException {
+        WebSocketClient sendClient = new WebSocketClient(new URI("ws://localhost:8080/dd/session/10001"));
+        WebSocketClient receiveClient = new WebSocketClient(new URI("ws://localhost:8080/dd/session/10002"));
+
+        var imgMsgPath = Path.of("src/test/resources", "128×128.json");
+        byte[] bytes = Files.readAllBytes(imgMsgPath);
+        var msg = new String(bytes);
+
+        var thread = new Thread(() -> {
+            int times = 5;
+            while (times-- >= 0) {
+                sendClient.sendMessage(String.format(msg, "10001", "10002", System.currentTimeMillis(), "10001"));
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+
         thread.join();
     }
 }
