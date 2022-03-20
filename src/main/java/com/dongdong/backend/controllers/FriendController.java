@@ -2,8 +2,12 @@ package com.dongdong.backend.controllers;
 
 import com.dongdong.backend.entity.Friend;
 import com.dongdong.backend.entity.FriendApplyVo;
+import com.dongdong.backend.entity.Message;
 import com.dongdong.backend.entity.Response;
 import com.dongdong.backend.services.FriendService;
+import com.dongdong.backend.services.SessionService;
+import com.dongdong.backend.utils.TimeUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +23,11 @@ public class FriendController {
     @Autowired
     private FriendService friendService;
 
+    @Autowired
+    private SessionService sessionService;
+
+    private static final String MASTER_ID="9999";
+
     /**
      * 好友申请
      *
@@ -31,6 +40,14 @@ public class FriendController {
     public Response apply(@RequestParam(name = "userId") String userId, @RequestParam(name = "friendId") String friendId, @RequestParam(name = "msg") String msg) {
         boolean res = friendService.apply(userId, friendId, msg);
         if (res) {
+            try {
+                var message=new Message(MASTER_ID,userId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"好友申请发送成功。");
+                sessionService.send(message.receiver(),message.timestamp(),Message.marshal(message));
+                message=new Message(MASTER_ID,friendId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"收到一条好友申请。");
+                sessionService.send(message.receiver(),message.timestamp(),Message.marshal(message));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
             return Response.succeed("申请成功。");
         } else {
             return Response.error("申请失败。");
@@ -48,6 +65,12 @@ public class FriendController {
     public Response accept(@RequestParam(name = "userId") String userId, @RequestParam(name = "friendId") String friendId) {
         boolean res = friendService.accept(userId, friendId);
         if (res) {
+            Message message=new Message(MASTER_ID,friendId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"您的好友申请已通过。");
+            try {
+                sessionService.send(message.receiver(),message.timestamp(),Message.marshal(message));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
             return Response.succeed("接受申请。");
         } else {
             return Response.error("接受失败。");
@@ -65,6 +88,12 @@ public class FriendController {
     public Response refuse(@RequestParam(name = "userId") String userId, @RequestParam(name = "friendId") String friendId) {
         boolean res = friendService.refuse(userId, friendId);
         if (res) {
+            Message message=new Message(MASTER_ID,friendId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"对方拒绝了您的好友申请。");
+            try {
+                sessionService.send(message.receiver(),message.timestamp(),Message.marshal(message));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
             return Response.succeed("拒绝申请。");
         } else {
             return Response.error("拒绝失败。");
@@ -98,9 +127,9 @@ public class FriendController {
     public Response delete(@RequestParam(name = "userId") String userId, @RequestParam(name = "friendId") String friendId) {
         boolean res = friendService.delete(userId, friendId);
         if (res) {
-            return Response.succeed("拒绝申请。");
+            return Response.succeed("删除成功。");
         } else {
-            return Response.error("拒绝失败。");
+            return Response.error("删除失败。");
         }
     }
 
