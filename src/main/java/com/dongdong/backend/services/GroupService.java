@@ -23,5 +23,9 @@ public interface GroupService {
 
     GroupInfoVO lookInfo(Long groupId);
 
-    void quit(Long userId, Long groupId);
+    void quit(Long userId,Long groupId);
+
+    void addFriend(Long userId,Long groupId);
+
+    void remove(Long userId,Long groupId);
 }

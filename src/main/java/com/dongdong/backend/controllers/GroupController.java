@@ -77,4 +77,16 @@ public class GroupController {
         groupService.quit(userId, groupId);
         return Response.succeed(null);
     }
+
+    @PostMapping("/invite")
+    public Response invite(@RequestParam Long userId,@RequestParam Long groupId){
+        groupService.addFriend(userId,groupId);
+        return Response.succeed(null);
+    }
+
+    @PostMapping("/remove")
+    public Response remove(@RequestParam Long userId, @RequestParam Long groupId){
+        groupService.remove(userId,groupId);
+        return Response.succeed(null);
+    }
 }

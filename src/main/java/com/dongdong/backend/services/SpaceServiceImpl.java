@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -86,21 +87,27 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
-    public List<BlogVO> showBlogs(String userId, String friendId) {
+    public List<BlogVO> showBlogs(String userId,String friendId) {
         User user = userRepository.findByUserId(Long.valueOf(friendId)).get();
         List<BlogVO> results = new ArrayList<>();
         List<Blog> blogs = blogRepository.findByUserIdOrderByTimestamp(Long.valueOf(friendId));
-        for (Blog blog : blogs) {
+        for(Blog blog : blogs){
             String blogId = String.valueOf(blog.getBlogId());
             String ownerId = String.valueOf(blog.getOwnerId());
             String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(blog.getTimestamp());
             User owner = userRepository.findByUserId(Long.valueOf(ownerId)).get();
-            List<Picture> pics = pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
+            List<Picture> pics = new ArrayList<>();
+            try {
+                pics = pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
+            }
+            catch (Exception e){
+                System.out.println("获取图片失败");
+            }
             List<Comment> coms = commentRepository.findByBlogIdOrderByTimestamp(Long.valueOf(blogId));
             List<CommentVO> comments = new ArrayList<>();
             List<String> pictures = new ArrayList<>();
-            if (coms.size() != 0) {
-                for (Comment comment : coms) {
+            if (coms.size() != 0){
+                for (Comment comment : coms){
                     CommentVO commentVO = new CommentVO();
                     commentVO.setCommentId(String.valueOf(comment.getCommentId()));
                     commentVO.setContext(comment.getContext());
@@ -137,8 +144,13 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     public Long addBlog(NewBlogVO newBlogVO) {
+        Calendar cal = Calendar.getInstance();
         Date date = new Date();
+        cal.setTime(date);
+        cal.add(Calendar.MINUTE, 8);
+        date = cal.getTime();
         Blog blog = new Blog();
+
         blog.setContext(newBlogVO.getContext());
         blog.setLikes(0);
         blog.setUserId(Long.valueOf(newBlogVO.getUserId()));

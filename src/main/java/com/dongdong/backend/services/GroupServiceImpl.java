@@ -147,4 +147,20 @@ public class GroupServiceImpl implements GroupService {
             userGroupRepository.deleteByUserIdAndGroupId(userId, groupId);
         }
     }
+
+    @Override
+    public void addFriend(Long userId, Long groupId) {
+        UserGroup  userGroup = new UserGroup();
+        userGroup.setUserId(userId);
+        userGroup.setGroupId(groupId);
+        userGroupRepository.save(userGroup);
+    }
+
+    @Override
+    public void remove(Long userId, Long groupId) {
+        UserGroup  userGroup = new UserGroup();
+        userGroup.setUserId(userId);
+        userGroup.setGroupId(groupId);
+        userGroupRepository.delete(userGroup);
+    }
 }
