@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -101,7 +102,13 @@ public class SpaceServiceImpl implements SpaceService {
             String ownerId=String.valueOf(blog.getOwnerId());
             String timestamp=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(blog.getTimestamp());
             User owner=userRepository.findByUserId(Long.valueOf(ownerId)).get();
-            List<Picture> pics=pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
+            List<Picture> pics=new ArrayList<>();
+            try {
+                pics = pictureRepository.findByBlogIdOrderByPictureId(Long.valueOf(blogId));
+            }
+            catch (Exception e){
+                System.out.println("获取图片失败");
+            }
             List<Comment> coms=commentRepository.findByBlogIdOrderByTimestamp(Long.valueOf(blogId));
             List<CommentVO> comments= new ArrayList<>();
             List<String> pictures= new ArrayList<>();
@@ -146,7 +153,11 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     public Long addBlog(NewBlogVO newBlogVO) {
+        Calendar cal= Calendar.getInstance();
         Date date=new Date();
+        cal.setTime(date);
+        cal.add(Calendar.MINUTE,8);
+        date=cal.getTime();
         Blog blog=new Blog();
         blog.setContext(newBlogVO.getContext());
         blog.setLikes(0);
