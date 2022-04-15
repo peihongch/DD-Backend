@@ -1,5 +1,6 @@
 package com.dongdong.backend.services;
 
+import com.dongdong.backend.entity.GroupVO;
 import com.dongdong.backend.entity.Message;
 import com.dongdong.backend.entity.Operation;
 import com.dongdong.backend.utils.SessionPool;
@@ -34,21 +35,23 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class SessionServiceImpl implements SessionService {
 
-    private static final Logger log = LoggerFactory.getLogger(SessionServiceImpl.class);
     public static final String P2P_MESSAGE_QUEUE = "message.p2p.%s";
     public static final String GROUP_MESSAGE_QUEUE = "message.group.%s";
     public static final String KAFKA_CONSUMER_GROUP_ID = "group.id.%s";
-
+    private static final Logger log = LoggerFactory.getLogger(SessionServiceImpl.class);
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final AdminClient kafkaAdmin;
     private final Properties kafkaProps;
 
+    private final GroupService groupService;
+
     //构造器方式注入  kafkaTemplate
     @Autowired
-    public SessionServiceImpl(KafkaTemplate<String, String> kafkaTemplate, AdminClient kafkaAdmin, Properties kafkaProps) {
+    public SessionServiceImpl(KafkaTemplate<String, String> kafkaTemplate, AdminClient kafkaAdmin, Properties kafkaProps, GroupService groupService) {
         this.kafkaTemplate = kafkaTemplate;
         this.kafkaAdmin = kafkaAdmin;
         this.kafkaProps = kafkaProps;
+        this.groupService = groupService;
     }
 
     /**
@@ -131,10 +134,14 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public void dispatch(String receiver) {
-        // TODO: 调用接口获取receiver所属的群组的DD号列表
-        var groups = new ArrayList<String>();
+        // 调用接口获取receiver所属的群组的DD号列表
+        var groups = this.groupService.show(Long.valueOf(receiver))
+                .parallelStream()
+                .map(GroupVO::getGroupId)
+                .map(String::valueOf)
+                .toList();
         // 测试用的群组
-        // groups.add("test-group");
+        // groups.add("10000");
         var p2pTopicName = this.getTopicName(receiver, false);
         var topicNames = new ArrayList<>(groups.stream().map(g -> getTopicName(g, true)).toList());
         topicNames.add(p2pTopicName);

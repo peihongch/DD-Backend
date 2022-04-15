@@ -1,12 +1,12 @@
 package com.dongdong.backend.services;
 
-import com.dongdong.backend.Repository.FriendApplyRepository;
-import com.dongdong.backend.Repository.FriendRepository;
-import com.dongdong.backend.Repository.UserRepository;
 import com.dongdong.backend.entity.Friend;
 import com.dongdong.backend.entity.FriendApply;
 import com.dongdong.backend.entity.FriendApplyVo;
 import com.dongdong.backend.entity.User;
+import com.dongdong.backend.repository.FriendApplyRepository;
+import com.dongdong.backend.repository.FriendRepository;
+import com.dongdong.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +32,9 @@ public class FriendService {
             Long id = Long.parseLong(userId);
             Long fid = Long.parseLong(friendId);
             if (userRepository.existsById(id) && userRepository.existsById(fid)) {
+                if(friendApplyRepository.existsByUserIdAndFriendId(id,fid) || friendApplyRepository.existsByUserIdAndFriendId(fid,id)){
+                    return false;
+                }
                 FriendApply friendApply = new FriendApply();
                 friendApply.setUserId(id);
                 friendApply.setFriendId(fid);
@@ -51,8 +54,8 @@ public class FriendService {
     @Transactional
     public boolean accept(String userId, String friendId) {
         try {
-            Long id = Long.parseLong(userId);
-            Long fid = Long.parseLong(friendId);
+            Long fid = Long.parseLong(userId);
+            Long id = Long.parseLong(friendId);
             friendApplyRepository.setState(id, fid, 1);
             Optional<User> opt = userRepository.findById(id);
             User user = opt.get();
@@ -80,8 +83,8 @@ public class FriendService {
 
     public boolean refuse(String userId, String friendId) {
         try {
-            Long id = Long.parseLong(userId);
-            Long fid = Long.parseLong(friendId);
+            Long fid = Long.parseLong(userId);
+            Long id = Long.parseLong(friendId);
             friendApplyRepository.setState(id, fid, 2);
             return true;
         } catch (Exception e) {
@@ -147,9 +150,9 @@ public class FriendService {
         try {
             Long id = Long.parseLong(userId);
             List<FriendApply> friends = friendApplyRepository.getFriendApplyByFriendId(id);
-            List<FriendApplyVo> res=new ArrayList<>();
-            for(FriendApply f:friends){
-                FriendApplyVo friendApplyVo=new FriendApplyVo(f);
+            List<FriendApplyVo> res = new ArrayList<>();
+            for (FriendApply f : friends) {
+                FriendApplyVo friendApplyVo = new FriendApplyVo(f);
                 Optional<User> opt = userRepository.findById(friendApplyVo.getUserId());
                 User user = opt.get();
                 friendApplyVo.setUserName(user.getUserName());

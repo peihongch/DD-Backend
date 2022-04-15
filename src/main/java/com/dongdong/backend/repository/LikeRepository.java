@@ -1,4 +1,4 @@
-package com.dongdong.backend.Repository;
+package com.dongdong.backend.repository;
 
 
 import com.dongdong.backend.entity.Like;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface LikeRepository extends JpaRepository<Like,Long>, JpaSpecificationExecutor<Like> {
+public interface LikeRepository extends JpaRepository<Like, Long>, JpaSpecificationExecutor<Like> {
 
-    boolean existsByBlogIdAndUserId(Long blogId,Long userId);
+    boolean existsByBlogIdAndUserId(Long blogId, Long userId);
 
     @Modifying
     @Transactional
-    void deleteByBlogIdAndUserId(Long blogId,Long userId);
+    void deleteByBlogIdAndUserId(Long blogId, Long userId);
 
     @Modifying
     @Transactional

@@ -1,4 +1,4 @@
-package com.dongdong.backend.Repository;
+package com.dongdong.backend.repository;
 
 import com.dongdong.backend.entity.GroupApply;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface GroupApplyRepository extends JpaRepository<GroupApply,Long> {
+public interface GroupApplyRepository extends JpaRepository<GroupApply, Long> {
 
     List<GroupApply> findByGroupIdInOrderByGroupId(List<Long> ids);
 

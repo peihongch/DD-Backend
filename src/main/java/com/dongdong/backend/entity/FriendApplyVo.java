@@ -15,8 +15,8 @@ public class FriendApplyVo {
     private String userName;
 
     public FriendApplyVo(FriendApply friendApply) {
-        this.userId=friendApply.getUserId();
-        this.msg=friendApply.getMsg();
-        this.state=friendApply.getState();
+        this.userId = friendApply.getUserId();
+        this.msg = friendApply.getMsg();
+        this.state = friendApply.getState();
     }
 }

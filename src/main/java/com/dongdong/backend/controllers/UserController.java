@@ -8,7 +8,6 @@ import com.dongdong.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -60,17 +59,15 @@ public class UserController {
      *
      * @param userId
      * @param password
-     * @param httpSession
      * @return
      */
     @PostMapping("/login")
     public Response login(@RequestParam(name = "userId") String userId,
-                          @RequestParam(name = "password") String password, HttpSession httpSession) {
+                          @RequestParam(name = "password") String password) {
         User user = userService.login(userId, password);
         if (user == null) {
             return Response.error("用户名或密码错误，登录失败。");
         } else {
-            httpSession.setAttribute("user", user);
             return Response.succeed(user);
         }
     }
@@ -82,9 +79,8 @@ public class UserController {
      * @return
      */
     @GetMapping("/get-information")
-    public Response getInformation(@RequestParam(name = "userId") String userId, HttpSession httpSession) {
-        User u = (User) httpSession.getAttribute("user");
-        UserVo user = userService.getUser(userId, u.getUserId());
+    public Response getInformation(@RequestParam(name = "userId") String userId, @RequestParam(name = "ownerId") String ownerId) {
+        UserVo user = userService.getUser(userId, Long.parseLong(ownerId));
         if (user == null) {
             return Response.error("该用户不存在或获取失败");
         } else {
@@ -95,12 +91,11 @@ public class UserController {
     /**
      * 退出登录
      *
-     * @param httpSession
+     * @param
      * @return
      */
     @GetMapping("/logout")
-    public Response logout(HttpSession httpSession) {
-        httpSession.removeAttribute("user");
+    public Response logout() {
         return Response.succeed("成功退出登录。");
     }
 
@@ -111,9 +106,8 @@ public class UserController {
      * @return
      */
     @GetMapping("/search-id")
-    public Response searchById(@RequestParam(name = "userId") String userId, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        UserVo userVo = userService.getUser(userId, user.getUserId());
+    public Response searchById(@RequestParam(name = "userId") String userId, @RequestParam(name = "ownerId") String ownerId) {
+        UserVo userVo = userService.getUser(userId, Long.parseLong(ownerId));
         if (userVo == null) {
             return Response.error("该用户不存在或获取失败");
         } else {
@@ -128,9 +122,8 @@ public class UserController {
      * @return
      */
     @GetMapping("/search-name")
-    public Response searchByName(@RequestParam(name = "userName") String userName, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        List<UserVo> users = userService.searchUser(userName, user.getUserId());
+    public Response searchByName(@RequestParam(name = "userName") String userName, @RequestParam(name = "ownerId") String ownerId) {
+        List<UserVo> users = userService.searchUser(userName, Long.parseLong(ownerId));
         if (users == null) {
             return Response.error("该用户不存在或获取失败");
         } else {
