@@ -32,7 +32,7 @@ public class FriendService {
             Long id = Long.parseLong(userId);
             Long fid = Long.parseLong(friendId);
             if (userRepository.existsById(id) && userRepository.existsById(fid)) {
-                if(friendApplyRepository.existsByUserIdAndFriendId(id,fid) || friendApplyRepository.existsByUserIdAndFriendId(fid,id)){
+                if(friendApplyRepository.existsByUserIdAndFriendIdAndState(id,fid,1) || friendApplyRepository.existsByUserIdAndFriendIdAndState(fid,id,1)){
                     return false;
                 }
                 FriendApply friendApply = new FriendApply();
@@ -57,6 +57,7 @@ public class FriendService {
             Long fid = Long.parseLong(userId);
             Long id = Long.parseLong(friendId);
             friendApplyRepository.setState(id, fid, 1);
+            friendApplyRepository.setState(fid, id, 1);
             Optional<User> opt = userRepository.findById(id);
             User user = opt.get();
             opt = userRepository.findById(fid);
@@ -112,6 +113,8 @@ public class FriendService {
             Long fid = Long.parseLong(friendId);
             friendRepository.deleteByUserIdAndFriendId(id, fid);
             friendRepository.deleteByUserIdAndFriendId(fid, id);
+            friendApplyRepository.deleteByUserIdAndFriendId(id,fid);
+            friendApplyRepository.deleteByUserIdAndFriendId(fid,id);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
