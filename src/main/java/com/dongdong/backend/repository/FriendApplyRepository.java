@@ -20,5 +20,8 @@ public interface FriendApplyRepository extends JpaRepository<FriendApply, Long> 
 
     List<FriendApply> getFriendApplyByFriendId(Long friendId);
 
-    boolean existsByUserIdAndFriendId(Long userId, Long friendId);
+
+    boolean existsByUserIdAndFriendIdAndState(Long userId, Long friendId, int state);
+
+    int deleteByUserIdAndFriendId(Long userId, Long friendId);
 }
