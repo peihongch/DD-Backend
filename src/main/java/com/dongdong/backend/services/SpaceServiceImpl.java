@@ -147,10 +147,9 @@ public class SpaceServiceImpl implements SpaceService {
         Calendar cal = Calendar.getInstance();
         Date date = new Date();
         cal.setTime(date);
-        cal.add(Calendar.MINUTE, 8);
+        cal.add(Calendar.HOUR, 8);
         date = cal.getTime();
         Blog blog = new Blog();
-
         blog.setContext(newBlogVO.getContext());
         blog.setLikes(0);
         blog.setUserId(Long.valueOf(newBlogVO.getUserId()));
