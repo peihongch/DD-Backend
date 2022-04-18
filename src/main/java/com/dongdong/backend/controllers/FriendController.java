@@ -41,16 +41,16 @@ public class FriendController {
         boolean res = friendService.apply(userId, friendId, msg);
         if (res) {
             try {
-                var message=new Message(MASTER_ID,userId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"好友申请发送成功。");
+                var message=new Message(MASTER_ID,userId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"Your invitation has been sent successfully");
                 sessionService.send(message.receiver(),message.timestamp(),Message.marshal(message));
-                message=new Message(MASTER_ID,friendId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"收到一条好友申请。");
+                message=new Message(MASTER_ID,friendId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"You have received an invitation");
                 sessionService.send(message.receiver(),message.timestamp(),Message.marshal(message));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-            return Response.succeed("申请成功。");
+            return Response.succeed("applied");
         } else {
-            return Response.error("申请失败。");
+            return Response.error("failed");
         }
     }
 
@@ -65,15 +65,15 @@ public class FriendController {
     public Response accept(@RequestParam(name = "userId") String userId, @RequestParam(name = "friendId") String friendId) {
         boolean res = friendService.accept(userId, friendId);
         if (res) {
-            Message message=new Message(MASTER_ID,friendId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"您的好友申请已通过。");
+            Message message=new Message(MASTER_ID,friendId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"Your invitation has been accepted");
             try {
                 sessionService.send(message.receiver(),message.timestamp(),Message.marshal(message));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-            return Response.succeed("接受申请。");
+            return Response.succeed("accepted");
         } else {
-            return Response.error("接受失败。");
+            return Response.error("failed");
         }
     }
 
@@ -88,15 +88,15 @@ public class FriendController {
     public Response refuse(@RequestParam(name = "userId") String userId, @RequestParam(name = "friendId") String friendId) {
         boolean res = friendService.refuse(userId, friendId);
         if (res) {
-            Message message=new Message(MASTER_ID,friendId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"对方拒绝了您的好友申请。");
+            Message message=new Message(MASTER_ID,friendId,0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),"Your invitation has been declined");
             try {
                 sessionService.send(message.receiver(),message.timestamp(),Message.marshal(message));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-            return Response.succeed("拒绝申请。");
+            return Response.succeed("declined");
         } else {
-            return Response.error("拒绝失败。");
+            return Response.error("failed");
         }
     }
 
@@ -112,7 +112,7 @@ public class FriendController {
         if (friends != null) {
             return Response.succeed(friends);
         } else {
-            return Response.error("获取失败。");
+            return Response.error("failed");
         }
     }
 
@@ -127,9 +127,9 @@ public class FriendController {
     public Response delete(@RequestParam(name = "userId") String userId, @RequestParam(name = "friendId") String friendId) {
         boolean res = friendService.delete(userId, friendId);
         if (res) {
-            return Response.succeed("删除成功。");
+            return Response.succeed("deleted");
         } else {
-            return Response.error("删除失败。");
+            return Response.error("failed");
         }
     }
 
@@ -144,9 +144,9 @@ public class FriendController {
     public Response blackList(@RequestParam(name = "userId") String userId, @RequestParam(name = "friendId") String friendId) {
         boolean res = friendService.black(userId, friendId);
         if (res) {
-            return Response.succeed("拉黑成功。");
+            return Response.succeed("succeed");
         } else {
-            return Response.error("拉黑失败。");
+            return Response.error("failed");
         }
     }
 
@@ -161,9 +161,9 @@ public class FriendController {
     public Response deblackList(@RequestParam(name = "userId") String userId, @RequestParam(name = "friendId") String friendId) {
         boolean res = friendService.deblack(userId, friendId);
         if (res) {
-            return Response.succeed("解除拉黑成功。");
+            return Response.succeed("succeed");
         } else {
-            return Response.error("解除拉黑失败。");
+            return Response.error("failed");
         }
     }
 
@@ -173,7 +173,7 @@ public class FriendController {
         if (res != null) {
             return Response.succeed(res);
         } else {
-            return Response.error("获取失败。");
+            return Response.error("failed");
         }
     }
 
