@@ -20,6 +20,9 @@ public class UserService {
     @Autowired
     private FriendRepository friendRepository;
 
+    private static final String MASTER_ID="9999";
+    private static final String MASTER_NAME="_ADMIN_";
+
     public Long signInByEmail(String email, String password, String userName) {
         User user = new User();
         user.setEmail(email);
@@ -27,10 +30,10 @@ public class UserService {
         user.setUserName(userName);
         User res = userRepository.save(user);
         Friend friend = new Friend();
-        friend.setFriendId(Long.parseLong("9999"));
+        friend.setFriendId(Long.parseLong(MASTER_ID));
         friend.setUserId(res.getUserId());
         friend.setBlack(0);
-        friend.setNickname("管理员");
+        friend.setNickname(MASTER_NAME);
         friendRepository.save(friend);
         return res.getUserId();
     }
@@ -42,10 +45,10 @@ public class UserService {
         user.setUserName(userName);
         User res = userRepository.save(user);
         Friend friend = new Friend();
-        friend.setFriendId(Long.parseLong("9999"));
+        friend.setFriendId(Long.parseLong(MASTER_ID));
         friend.setUserId(res.getUserId());
         friend.setBlack(0);
-        friend.setNickname("管理员");
+        friend.setNickname(MASTER_NAME);
         friendRepository.save(friend);
         return res.getUserId();
     }

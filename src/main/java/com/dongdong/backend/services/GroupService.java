@@ -25,7 +25,7 @@ public interface GroupService {
 
     void quit(Long userId,Long groupId);
 
-    void addFriend(Long userId,Long groupId);
+    String addFriend(Long userId,Long groupId);
 
     void remove(Long userId,Long groupId);
 }
