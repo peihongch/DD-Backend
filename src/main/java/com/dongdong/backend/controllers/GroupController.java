@@ -96,12 +96,16 @@ public class GroupController {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+        String topicName = sessionService.getTopicName(groupId.toString(), true);
+        sessionService.updateKafkaConsumer(userId.toString(), topicName, Operation.ADD);
         return Response.succeed(null);
     }
 
     @PostMapping("/remove")
     public Response remove(@RequestParam Long userId, @RequestParam Long groupId){
         groupService.remove(userId,groupId);
+        String topicName = sessionService.getTopicName(groupId.toString(), true);
+        sessionService.updateKafkaConsumer(userId.toString(), topicName, Operation.DELETE);
         return Response.succeed(null);
     }
 }
