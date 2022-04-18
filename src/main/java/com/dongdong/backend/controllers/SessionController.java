@@ -39,6 +39,9 @@ public class SessionController {
         // sessionService.register("dd1", false);
         // sessionService.register("dd2", false);
         // sessionService.register("test-group", true);
+        // 创建群聊topic
+        // joinGroup(name, "1");
+        // joinGroup(name, "1");
         //////////////////////////////////////
         sessionService.dispatch(name);
     }
