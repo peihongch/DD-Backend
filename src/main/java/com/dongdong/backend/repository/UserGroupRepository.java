@@ -24,4 +24,6 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
     @Modifying
     @Transactional
     void deleteByGroupId(Long groupId);
+
+
 }

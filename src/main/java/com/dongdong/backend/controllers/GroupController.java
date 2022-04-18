@@ -3,6 +3,9 @@ package com.dongdong.backend.controllers;
 
 import com.dongdong.backend.entity.*;
 import com.dongdong.backend.services.GroupService;
+import com.dongdong.backend.services.SessionService;
+import com.dongdong.backend.utils.TimeUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +17,11 @@ public class GroupController {
 
     @Autowired
     GroupService groupService;
+
+    @Autowired
+    private SessionService sessionService;
+
+    private static final String MASTER_ID="9999";
 
     @GetMapping("/list")
     public Response show(@RequestParam Long userId) {
@@ -80,7 +88,14 @@ public class GroupController {
 
     @PostMapping("/invite")
     public Response invite(@RequestParam Long userId,@RequestParam Long groupId){
-        groupService.addFriend(userId,groupId);
+        String groupName=groupService.addFriend(userId,groupId);
+        String msg="You have been invites to "+groupName+"(ID: "+groupId+")";
+        try {
+            var message=new Message(MASTER_ID,userId.toString(),0,Message.TYPE_TEXT, TimeUtils.currentTimestamp(),msg);
+            sessionService.send(message.receiver(),message.timestamp(),Message.marshal(message));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         return Response.succeed(null);
     }
 

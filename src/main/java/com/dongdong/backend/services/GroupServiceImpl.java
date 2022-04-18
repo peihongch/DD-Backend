@@ -149,11 +149,15 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void addFriend(Long userId, Long groupId) {
+    public String addFriend(Long userId, Long groupId) {
         UserGroup  userGroup = new UserGroup();
         userGroup.setUserId(userId);
         userGroup.setGroupId(groupId);
         userGroupRepository.save(userGroup);
+
+        // 返回群组的名称
+        Group group = groupRepository.findByGroupId(groupId).get();
+        return group.getGroupName();
     }
 
     @Override
