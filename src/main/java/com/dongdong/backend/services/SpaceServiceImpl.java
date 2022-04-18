@@ -62,7 +62,7 @@ public class SpaceServiceImpl implements SpaceService {
                     comments.add(commentVO);
                 }
             }
-            if (pictures.size() != 0) {
+            if (pics.size() != 0) {
                 for (Picture picture : pics) {
                     pictures.add(picture.getPic());
                 }
@@ -118,7 +118,7 @@ public class SpaceServiceImpl implements SpaceService {
                     comments.add(commentVO);
                 }
             }
-            if (pictures.size() != 0) {
+            if (pics.size() != 0) {
                 for (Picture picture : pics) {
                     pictures.add(picture.getPic());
                 }

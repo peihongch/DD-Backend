@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
@@ -16,6 +17,8 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
     boolean existsByUserIdAndGroupId(Long userId, Long groupId);
 
     List<UserGroup> findByGroupId(Long id);
+
+    Optional<UserGroup> findByUserIdAndGroupId(Long userId,Long groupId);
 
     @Modifying
     @Transactional
