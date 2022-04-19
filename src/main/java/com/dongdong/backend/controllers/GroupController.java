@@ -58,7 +58,11 @@ public class GroupController {
 
     @PostMapping("/request/handle")
     public Response handle(@RequestParam Long groupRequestId, @RequestParam Long type) {
-        groupService.handleRequest(groupRequestId, type);
+        GroupApply groupApply=groupService.handleRequest(groupRequestId, type);
+        if (type.equals(0)){
+            String topicName = sessionService.getTopicName(String.valueOf(groupApply.getGroupId()), true);
+            sessionService.updateKafkaConsumer(String.valueOf(groupApply.getUserId()), topicName, Operation.ADD);
+        }
         return Response.succeed(null);
     }
 
@@ -83,6 +87,8 @@ public class GroupController {
     @PostMapping("/quit")
     public Response quit(@RequestParam Long userId, @RequestParam Long groupId) {
         groupService.quit(userId, groupId);
+        String topicName = sessionService.getTopicName(String.valueOf(groupId), true);
+        sessionService.updateKafkaConsumer(String.valueOf(userId), topicName, Operation.DELETE);
         return Response.succeed(null);
     }
 

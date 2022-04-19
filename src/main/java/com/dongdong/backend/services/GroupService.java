@@ -1,9 +1,6 @@
 package com.dongdong.backend.services;
 
-import com.dongdong.backend.entity.GroupInfoVO;
-import com.dongdong.backend.entity.GroupRequestVO;
-import com.dongdong.backend.entity.GroupSearchVO;
-import com.dongdong.backend.entity.GroupVO;
+import com.dongdong.backend.entity.*;
 
 import java.util.List;
 
@@ -17,7 +14,7 @@ public interface GroupService {
 
     List<GroupRequestVO> showRequest(Long userId);
 
-    void handleRequest(Long requestId, Long type);
+    GroupApply handleRequest(Long requestId, Long type);
 
     Long create(Long userId, String groupName);
 
