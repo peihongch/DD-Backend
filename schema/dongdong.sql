@@ -29,8 +29,10 @@ CREATE TABLE `blog` (
   `timestamp` datetime DEFAULT NULL,
   `likes` int DEFAULT '0',
   `context` text,
-  PRIMARY KEY (`blog_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  PRIMARY KEY (`blog_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `blog_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -56,7 +58,7 @@ CREATE TABLE `comments` (
   `timestamp` datetime DEFAULT NULL,
   `context` text,
   PRIMARY KEY (`comment_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,6 +109,7 @@ CREATE TABLE `friend_list` (
   `friend_id` int NOT NULL,
   `nickname` varchar(45) DEFAULT NULL,
   `blackList` int DEFAULT '0',
+  `black_list` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id_1_idx` (`user_id`,`friend_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -119,30 +122,6 @@ CREATE TABLE `friend_list` (
 LOCK TABLES `friend_list` WRITE;
 /*!40000 ALTER TABLE `friend_list` DISABLE KEYS */;
 /*!40000 ALTER TABLE `friend_list` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `group`
---
-
-DROP TABLE IF EXISTS `group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `group` (
-  `group_id` int NOT NULL AUTO_INCREMENT,
-  `group_name` varchar(45) DEFAULT NULL,
-  `master_id` int DEFAULT NULL,
-  PRIMARY KEY (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `group`
---
-
-LOCK TABLES `group` WRITE;
-/*!40000 ALTER TABLE `group` DISABLE KEYS */;
-/*!40000 ALTER TABLE `group` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -159,7 +138,7 @@ CREATE TABLE `group_apply` (
   `reason` varchar(200) DEFAULT NULL,
   `state` int DEFAULT '0',
   PRIMARY KEY (`apply_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,7 +161,11 @@ CREATE TABLE `likes` (
   `like_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `blog_id` int NOT NULL,
-  PRIMARY KEY (`like_id`)
+  PRIMARY KEY (`like_id`),
+  KEY `user_id` (`user_id`),
+  KEY `blog_id` (`blog_id`),
+  CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`blog_id`) REFERENCES `blog` (`blog_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -220,6 +203,30 @@ LOCK TABLES `pictures` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `qun`
+--
+
+DROP TABLE IF EXISTS `qun`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `qun` (
+  `group_id` int NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `master_id` int DEFAULT NULL,
+  PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `qun`
+--
+
+LOCK TABLES `qun` WRITE;
+/*!40000 ALTER TABLE `qun` DISABLE KEYS */;
+/*!40000 ALTER TABLE `qun` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -244,7 +251,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (9999,'管理员',NULL,NULL,NULL,0,2);
+INSERT INTO `user` VALUES (9999,'_ADMIN_',NULL,NULL,NULL,0,2);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,7 +267,7 @@ CREATE TABLE `user_group` (
   `user_id` int DEFAULT NULL,
   `group_id` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -281,4 +288,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-07 21:04:37
+-- Dump completed on 2022-04-18 15:37:01

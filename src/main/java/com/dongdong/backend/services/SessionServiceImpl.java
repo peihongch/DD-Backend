@@ -139,8 +139,6 @@ public class SessionServiceImpl implements SessionService {
                 .map(GroupVO::getGroupId)
                 .map(String::valueOf)
                 .toList();
-        // 测试用的群组
-        // groups.add("10000");
         var p2pTopicName = this.getTopicName(receiver, false);
         var topicNames = new ArrayList<>(groups.stream().map(g -> getTopicName(g, true)).toList());
         topicNames.add(p2pTopicName);
@@ -193,8 +191,14 @@ public class SessionServiceImpl implements SessionService {
             props.put(ConsumerConfig.GROUP_ID_CONFIG, String.format(KAFKA_CONSUMER_GROUP_ID, receiver));
 
             consumer = new KafkaConsumer<>(props);
+            System.out.println("======> before subscribe: " + receiver);
+            consumer.listTopics().forEach((key, value) ->
+                    System.out.println(key + " -> " + value.parallelStream().map(PartitionInfo::topic).toList().toString()));
             //订阅topic的消息
             consumer.subscribe(topicNames);
+            System.out.println("======> after subscribe: " + receiver);
+            consumer.listTopics().forEach((key, value) ->
+                    System.out.println(key + " -> " + value.parallelStream().map(PartitionInfo::topic).toList().toString()));
 
             SessionPool.cacheKafkaConsumer(receiver, consumer);
         }
