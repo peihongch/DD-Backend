@@ -9,6 +9,7 @@ import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.errors.TopicExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,7 @@ import javax.websocket.RemoteEndpoint;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -209,12 +208,15 @@ public class SessionServiceImpl implements SessionService {
         }
 
         var topicNames = consumer.listTopics().keySet();
+        var newTopicNames = new HashSet<String>(topicNames);
         switch (op) {
-            case DELETE -> topicNames.remove(topicName);
-            case ADD -> topicNames.add(topicName);
+            case DELETE -> newTopicNames.remove(topicName);
+            case ADD -> newTopicNames.add(topicName);
         }
 
-        consumer.subscribe(topicNames);
+        consumer.subscribe(newTopicNames);
+        consumer.listTopics().forEach((key, value) ->
+                System.out.println(key + " -> " + value.parallelStream().map(PartitionInfo::topic).toList().toString()));
     }
 
 }
