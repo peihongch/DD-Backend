@@ -94,7 +94,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public GroupApply handleRequest(Long requestId, Long type) {
         GroupApply groupApply = groupApplyRepository.findByApplyId(requestId).get();
-        if (type.equals(0)) {
+        if (type.equals(Long.valueOf(0))) {
             UserGroup userGroup = new UserGroup();
             userGroup.setUserId(groupApply.getUserId());
             userGroup.setGroupId(groupApply.getGroupId());
