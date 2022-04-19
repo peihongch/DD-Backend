@@ -22,6 +22,8 @@ public class GroupServiceImpl implements GroupService {
     GroupApplyRepository groupApplyRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    SessionService sessionService;
 
     @Override
     public List<GroupVO> show(Long userId) {
@@ -99,6 +101,8 @@ public class GroupServiceImpl implements GroupService {
             userGroup.setUserId(groupApply.getUserId());
             userGroup.setGroupId(groupApply.getGroupId());
             userGroupRepository.save(userGroup);
+            String topicName=sessionService.getTopicName(String.valueOf(groupApply.getGroupId()),true);
+            sessionService.updateKafkaConsumer(String.valueOf(groupApply.getUserId()),topicName,Operation.ADD);
         }
         groupApplyRepository.deleteByApplyId(requestId);
     }
