@@ -4,12 +4,12 @@ import com.dongdong.backend.entity.GroupVO;
 import com.dongdong.backend.entity.Message;
 import com.dongdong.backend.entity.Operation;
 import com.dongdong.backend.utils.SessionPool;
+import com.dongdong.backend.utils.SynchronizedKafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.errors.TopicExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -183,22 +183,16 @@ public class SessionServiceImpl implements SessionService {
     }
 
     public KafkaConsumer<String, String> getKafkaConsumer(String receiver, List<String> topicNames) {
-        KafkaConsumer<String, String> consumer = SessionPool.getKafkaConsumer(receiver);
+        var consumer = SessionPool.getKafkaConsumer(receiver);
         if (consumer == null) {
             //创建消息者实例
             var props = new Properties();
             props.putAll(this.kafkaProps);
             props.put(ConsumerConfig.GROUP_ID_CONFIG, String.format(KAFKA_CONSUMER_GROUP_ID, receiver));
 
-            consumer = new KafkaConsumer<>(props);
-            System.out.println("======> before subscribe: " + receiver);
-            consumer.listTopics().forEach((key, value) ->
-                    System.out.println(key + " -> " + value.parallelStream().map(PartitionInfo::topic).toList().toString()));
+            consumer = new SynchronizedKafkaConsumer<>(props);
             //订阅topic的消息
             consumer.subscribe(topicNames);
-            System.out.println("======> after subscribe: " + receiver);
-            consumer.listTopics().forEach((key, value) ->
-                    System.out.println(key + " -> " + value.parallelStream().map(PartitionInfo::topic).toList().toString()));
 
             SessionPool.cacheKafkaConsumer(receiver, consumer);
         }
@@ -212,15 +206,13 @@ public class SessionServiceImpl implements SessionService {
         }
 
         var topicNames = consumer.listTopics().keySet();
-        var newTopicNames = new HashSet<String>(topicNames);
+        var newTopicNames = new HashSet<>(topicNames);
         switch (op) {
             case DELETE -> newTopicNames.remove(topicName);
             case ADD -> newTopicNames.add(topicName);
         }
 
         consumer.subscribe(newTopicNames);
-        consumer.listTopics().forEach((key, value) ->
-                System.out.println(key + " -> " + value.parallelStream().map(PartitionInfo::topic).toList().toString()));
     }
 
 }
