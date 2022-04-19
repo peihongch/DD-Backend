@@ -59,7 +59,7 @@ public class GroupController {
     @PostMapping("/request/handle")
     public Response handle(@RequestParam Long groupRequestId, @RequestParam Long type) {
         GroupApply groupApply=groupService.handleRequest(groupRequestId, type);
-        if (type.equals(Long.valueOf(0))){
+        if (type.equals(0L)){
             String topicName = sessionService.getTopicName(String.valueOf(groupApply.getGroupId()), true);
             sessionService.updateKafkaConsumer(String.valueOf(groupApply.getUserId()), topicName, Operation.ADD);
         }
